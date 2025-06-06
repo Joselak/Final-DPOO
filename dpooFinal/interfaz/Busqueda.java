@@ -135,6 +135,7 @@ public class Busqueda extends JDialog {
         
         // TABLA PARA LOS RESULTADOS
         tableModel = new DefaultTableModel();
+        
         tableModel.addColumn("ID");
         tableModel.addColumn("Nombre");
         tableModel.addColumn("Tipo");
@@ -150,7 +151,7 @@ public class Busqueda extends JDialog {
         tableModel.fireTableDataChanged();
         tableResultados.revalidate();
         tableResultados.repaint();
-        
+    
         // PANEL DE BOTONES
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -174,14 +175,7 @@ public class Busqueda extends JDialog {
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
         
-        JButton cancelButton = new JButton("Cancelar");
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
-        cancelButton.setActionCommand("Cancel");
-        buttonPane.add(cancelButton);
+        
         
         setLocationRelativeTo(null);
         

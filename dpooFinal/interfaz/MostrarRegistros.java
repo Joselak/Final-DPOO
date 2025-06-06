@@ -7,16 +7,18 @@ import dpooFinal.logica.Registro;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.ScrollPane;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -32,7 +34,9 @@ public class MostrarRegistros extends JDialog {
     
 
 	private final JPanel contentPanel = new JPanel();
-	private JTable table_1;
+	private JTable tableResultados;
+	private JScrollPane scrollPane;
+	
 
 	/**
 	 * Launch the application.
@@ -51,23 +55,34 @@ public class MostrarRegistros extends JDialog {
 	 * Create the dialog.
 	 */
 	public MostrarRegistros() {
-		setTitle("Tabla de registros");
-		
-		
-		
+		setTitle("Tabla de registros");	
 		setBounds(100, 100, 595, 423);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+
+		JPanel panelResultados = new JPanel(new BorderLayout());
+        panelResultados.setBounds(10, 60, 550, 200);
+        contentPanel.add(panelResultados);
 		
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setBounds(30, 63, 513, 278);
-		contentPanel.add(scrollPane);
+		 model = new DefaultTableModel();
+	    
+	    model.addColumn("Carnet");
+	    model.addColumn("Nombre");
+	    model.addColumn("Local");
+	    model.addColumn("Hora Entrada");
+	    model.addColumn("Hora Salida");
+        
+        tableResultados = new JTable(model);
+        scrollPane = new JScrollPane(tableResultados);
+        panelResultados.add(scrollPane, BorderLayout.CENTER);
 		
-		table_1 = new JTable();
-		table_1.setBounds(30, 334, 513, -271);
-		scrollPane.add(table_1);
+        
+        model.fireTableDataChanged();
+        tableResultados.revalidate();
+        tableResultados.repaint();
+    
 		
 		JLabel lblRegistros = new JLabel("Registros:");
 		lblRegistros.setBounds(30, 27, 69, 14);
@@ -113,16 +128,10 @@ public class MostrarRegistros extends JDialog {
 
 	
 	private void mostrarRegistros() {
-	    model = new DefaultTableModel();
-	    
-	    model.addColumn("Carnet");
-	    model.addColumn("Nombre");
-	    model.addColumn("Local");
-	    model.addColumn("Hora Entrada");
-	    model.addColumn("Hora Salida");
+	   
  
 	    
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
 	    
 	    for (Local local : facultad.getLocales()) {
 	        for (Registro registro : local.getRegistros()) {
@@ -141,24 +150,11 @@ public class MostrarRegistros extends JDialog {
 	        }
 	    }
 
-	    table_1.setModel(model);
+	    tableResultados.setModel(model);
 	}
 }
 
 
 
-
-/*ScrollPane scrollPane = new ScrollPane();
-scrollPane.setBounds(10, 72, 540, 297);
-contentPane.add(scrollPane);
-
-table = new JTable();
-table.setEnabled(false);
-scrollPane.add(table);
-
-
-JLabel lblRegistros = new JLabel("Registros:");
-lblRegistros.setBounds(10, 40, 66, 14);
-contentPane.add(lblRegistros);*/
 
 
