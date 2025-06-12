@@ -1,7 +1,6 @@
 
 package dpooFinal.interfaz;
 
-
 import dpooFinal.logica.Facultad;
 import dpooFinal.logica.Local;
 import dpooFinal.logica.Administrativo;
