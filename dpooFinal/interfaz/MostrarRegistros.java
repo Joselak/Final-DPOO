@@ -114,9 +114,7 @@ public class MostrarRegistros extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-		
-		
-		
+	
 		setLocationRelativeTo(null);
 	}
 	
@@ -128,9 +126,9 @@ public class MostrarRegistros extends JDialog {
 
 	
 	private void mostrarRegistros() {
-	   
- 
-	    
+	      
+		model.setRowCount(0); 
+		
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
 	    
 	    for (Local local : facultad.getLocales()) {
