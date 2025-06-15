@@ -3,9 +3,7 @@ package dpooFinal.interfaz;
 
 
 import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
 import dpooFinal.logica.Administrativo;
-import dpooFinal.logica.Clasificacion;
 import dpooFinal.logica.Persona;
 import dpooFinal.logica.TipoPersonal;
 import dpooFinal.logica.Directivo;
@@ -22,7 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -42,29 +39,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.DefaultComboBoxModel;
-
-
 import java.awt.CardLayout;
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-
 import javax.swing.SpinnerNumberModel;
 
-public class AñadirRegistro extends JDialog {
+
+
+
+
+public class AnadirPersona extends JDialog {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JComboBox<TipoPersonal> comboBoxTipo; 
-	private JComboBox<Clasificacion> comboBoxLocal;
-	private JComboBox<String> comboBoxAnio1;
-	private JComboBox<String> comboBoxMes1;
-	private JSpinner spinnerDias1;
-	private JSpinner spinnerHoraEntrada;
-	private JSpinner spinnerHoraSalida;
-
     private final JPanel contentPanel = new JPanel();
     private JTextField txtNombre;
     private JTextField txtApellidos;
@@ -111,7 +99,7 @@ public class AñadirRegistro extends JDialog {
     
     public static void main(String[] args) {
         try {
-            AñadirRegistro dialog = new AñadirRegistro();
+            AnadirPersona dialog = new AnadirPersona();
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
@@ -126,9 +114,9 @@ public class AñadirRegistro extends JDialog {
 		this.facultad = facultad;
 	}
 
-	public AñadirRegistro() {
-        setTitle("Añadir Registro");
-        setBounds(100, 100, 575, 544);
+	public AnadirPersona() {
+        setTitle("Añadir Persona");
+        setBounds(100, 100, 576, 337);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -136,7 +124,6 @@ public class AñadirRegistro extends JDialog {
         
         crearPanelInformacionPersonal();
         crearPanelTipoPersona();
-        crearPanelFechaHora();
         crearPanelBotones();
         
         setLocationRelativeTo(null);
@@ -267,7 +254,7 @@ public class AñadirRegistro extends JDialog {
         panelEstudiante.add(lblAo);
         
         JSpinner spinner = new JSpinner();
-        spinner.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(0)));
+        spinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
         spinner.setBounds(153, 10, 29, 20);
         panelEstudiante.add(spinner);
      
@@ -432,105 +419,7 @@ public class AñadirRegistro extends JDialog {
         
     }
 //PANEL PARA PONER LA FECHA Y HORA 
-    private void crearPanelFechaHora() {
-    	JPanel panel_2 = new JPanel();
-        panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Fecha ", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        panel_2.setBounds(10, 228, 406, 64);
-        contentPanel.add(panel_2);
-        panel_2.setLayout(null);
-        
-        JLabel lblAo_1 = new JLabel("A\u00F1o:");
-        lblAo_1.setBounds(21, 28, 38, 14);
-        panel_2.add(lblAo_1);
-        
-        JLabel lblMes = new JLabel("Mes:");
-        lblMes.setBounds(152, 28, 29, 14);
-        panel_2.add(lblMes);
-        
-        JLabel lblDa = new JLabel("D\u00EDa:");
-        lblDa.setBounds(308, 28, 24, 14);
-        panel_2.add(lblDa);
-        
-        // Usar la variable de clase en lugar de local
-        spinnerDias1 = new JSpinner();
-        spinnerDias1.setModel(new SpinnerNumberModel(1, 1, 31, 1));
-        spinnerDias1.setBounds(342, 25, 38, 20);
-        panel_2.add(spinnerDias1);
-        
-        comboBoxAnio1 = new JComboBox<>();
-        comboBoxAnio1.addItem("2025");
-        comboBoxAnio1.addItem("2026");
-        comboBoxAnio1.addItem("2027");
-        comboBoxAnio1.setBounds(69, 25, 63, 20);
-        panel_2.add(comboBoxAnio1);
-        
-        comboBoxMes1 = new JComboBox<>();
-        comboBoxMes1.addItem("Enero");
-        comboBoxMes1.addItem("Febrero");
-        comboBoxMes1.addItem("Marzo");
-        comboBoxMes1.addItem("Abril");
-        comboBoxMes1.addItem("Mayo");
-        comboBoxMes1.addItem("Junio");
-        comboBoxMes1.addItem("Julio");
-        comboBoxMes1.addItem("Agosto");
-        comboBoxMes1.addItem("Septiembre");
-        comboBoxMes1.addItem("Octubre");
-        comboBoxMes1.addItem("Noviembre");
-        comboBoxMes1.addItem("Diciembre");
-        
-        comboBoxMes1.setBounds(191, 25, 93, 20);
-        panel_2.add(comboBoxMes1);
-        
-
-        
-        
-        //PANEL PARA PONER EL LOCAL
-        JPanel panel = new JPanel();
-        panel.setBorder(new TitledBorder(null, "Local de acceso", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panel.setBounds(275, 303, 251, 98);
-        contentPanel.add(panel);
-        panel.setLayout(null);
-        
-        JLabel lblLocal = new JLabel("Local:");
-        lblLocal.setBounds(21, 26, 46, 14);
-        panel.add(lblLocal);
-        
-        comboBoxLocal = new JComboBox<>(new DefaultComboBoxModel<>(Clasificacion.values()));
-        comboBoxLocal.setBounds(59, 23, 112, 20);
-        panel.add(comboBoxLocal);
-        
-        JPanel panel_1 = new JPanel();
-        panel_1.setBorder(new TitledBorder(null, "Hora", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panel_1.setBounds(10, 303, 227, 98);
-        contentPanel.add(panel_1);
-        panel_1.setLayout(null);
-        
-        JLabel lblHoraDeEntrada_1 = new JLabel("Hora de entrada:");
-        lblHoraDeEntrada_1.setBounds(10, 22, 101, 14);
-        panel_1.add(lblHoraDeEntrada_1);
-        
-        JLabel lblHoraDeSalida_1 = new JLabel("Hora de salida:");
-        lblHoraDeSalida_1.setBounds(10, 61, 101, 14);
-        panel_1.add(lblHoraDeSalida_1);
-        
-        spinnerHoraEntrada = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor horaEditorEntrada = new JSpinner.DateEditor(spinnerHoraEntrada, "HH:mm");
-        spinnerHoraEntrada.setEditor(horaEditorEntrada);
-        spinnerHoraEntrada.setValue(new Date());
-        
-        spinnerHoraEntrada.setBounds(121, 19, 51, 20);
-        panel_1.add(spinnerHoraEntrada);  
-
-        spinnerHoraSalida = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor horaEditorSalida = new JSpinner.DateEditor(spinnerHoraSalida, "HH:mm");
-        spinnerHoraSalida.setEditor(horaEditorSalida); 
-        spinnerHoraSalida.setValue(new Date());
-        
-
-        spinnerHoraSalida.setBounds(121, 58, 51, 20); 
-        panel_1.add(spinnerHoraSalida);   
-        
-    }
+    
 
     private void crearPanelBotones() {
         JPanel buttonPane = new JPanel();
@@ -591,66 +480,46 @@ public class AñadirRegistro extends JDialog {
     }
     
     private void guardarRegistro() {
-    	
-    	 try {
-    	        // Validar campos básicos
-    	        if (txtNombre.getText().trim().isEmpty() || 
-    	            txtApellidos.getText().trim().isEmpty() || 
-    	            txtIdentidad.getText().trim().isEmpty()) {
-    	            JOptionPane.showMessageDialog(this, "Nombre, apellidos e identidad son obligatorios", 
-    	                "Error", JOptionPane.ERROR_MESSAGE);
-    	            
-    	        }else if (comboBoxTipo.getSelectedItem() == null) {
-    	            JOptionPane.showMessageDialog(this, "Seleccione un tipo de persona", 
-    	                "Error", JOptionPane.ERROR_MESSAGE);
-    	            
-    	        }
-    	        
-    	        // Obtener datos del formulario
-                String nombre = txtNombre.getText();
-                String apellido = txtApellidos.getText();
-                String numID = txtIdentidad.getText();
-                
-    			TipoPersonal tipo = (TipoPersonal)comboBoxTipo.getSelectedItem();
-                
-                // Crear persona según el tipo
-                Persona persona = crearPersonaSegunTipo(nombre, apellido, numID, tipo);
-                
-    		
-    			// Obtener fechas y horas
-                LocalDateTime horaEntrada = obtenerFechaHora(comboBoxAnio1, comboBoxMes1, 
-                		spinnerDias1, spinnerHoraEntrada);
-                
-    			LocalDateTime horaSalida = obtenerFechaHora(comboBoxAnio1, comboBoxMes1, 
-                		spinnerDias1, spinnerHoraSalida);
-                
-    			// Obtener local seleccionado
-                Clasificacion tipoLocal = (Clasificacion)comboBoxLocal.getSelectedItem();
-                Local local = obtenerLocalPorTipo(tipoLocal);
-    	        
-                // Verificar acceso
-    	        if (!facultad.verificarAcceso(local, persona)) {
-                    JOptionPane.showMessageDialog(this, 
-                        "Esta persona no puede acceder a este local en el horario seleccionado", 
-                        "Acceso denegado", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                
-                // Registrar acceso
-                local.registrarAcceso(persona, horaEntrada, horaSalida);
+        try {
+            // Validaciones
+            if (txtNombre.getText().trim().isEmpty() || 
+                txtApellidos.getText().trim().isEmpty() || 
+                txtIdentidad.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nombre, apellidos e identidad son obligatorios", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            } else if (comboBoxTipo.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Seleccione un tipo de persona", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Obtener datos
+            String nombre = txtNombre.getText();
+            String apellido = txtApellidos.getText();
+            String numID = txtIdentidad.getText();
+            TipoPersonal tipo = (TipoPersonal) comboBoxTipo.getSelectedItem();
+            
+            // Crear persona
+            Persona persona = crearPersonaSegunTipo(nombre, apellido, numID, tipo);
+            
+            // AÑADIDO: Guardar persona en la facultad
+            if (facultad != null) {
                 facultad.agregarPersona(persona);
-                
-                JOptionPane.showMessageDialog(this, "Registro guardado exitosamente");
-                dispose();
-     
-    	        
-    	    } catch (Exception e) {
-    	        JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage(), 
-    	            "Error", JOptionPane.ERROR_MESSAGE);
-    	        e.printStackTrace();
-    	    }
-    	
-        
+            } else {
+                JOptionPane.showMessageDialog(this, "Error: Facultad no inicializada", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            JOptionPane.showMessageDialog(this, "Persona registrada exitosamente\nID: " + numID);
+            dispose();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     private Persona crearPersonaSegunTipo(String nombre, String apellido, String numID, TipoPersonal tipo) {
@@ -699,40 +568,5 @@ public class AñadirRegistro extends JDialog {
                 throw new IllegalArgumentException("Tipo de persona no soportado: " + tipo);
         }
     }
-
-    private LocalDateTime obtenerFechaHora(JComboBox<String> comboAnio, JComboBox<String> comboMes, 
-            JSpinner spinnerDia, JSpinner spinnerHora) {
-        try {
-            int year = Integer.parseInt((String) comboAnio.getSelectedItem());
-            int month = comboMes.getSelectedIndex() + 1; // Los meses empiezan en 0
-            int day = (Integer) spinnerDia.getValue();
-            
-            Date horaDate = (Date) spinnerHora.getValue();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(horaDate);
-            
-            return LocalDateTime.of(year, month, day, 
-                                  cal.get(Calendar.HOUR_OF_DAY), 
-                                  cal.get(Calendar.MINUTE));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al obtener fecha/hora: " + e.getMessage(), 
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
-
-    private Local obtenerLocalPorTipo(Clasificacion tipoLocal) {
-        for (Local local : facultad.getLocales()) {
-            if (local.getTipoLocal() == tipoLocal) {
-                return local;
-            }
-        }
-        // Si no existe, crear uno nuevo con un ID único
-        String nuevoId = tipoLocal.name() + "-" + (facultad.getLocales().size() + 1);
-        Local nuevoLocal = new Local(nuevoId, tipoLocal);
-        facultad.agregarLocal(nuevoLocal);
-        return nuevoLocal;
-    }
 }
-
 

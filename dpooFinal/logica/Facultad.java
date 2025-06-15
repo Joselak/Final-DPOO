@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Facultad {
-
-    private ArrayList<Local>locales;
+		
+	
+	private ArrayList<Local>locales;
 	private ArrayList<Persona>personas;
+	boolean  encontrar;
 
 	
     public Facultad() {
@@ -52,24 +54,53 @@ public class Facultad {
         return encontrado;
     }
     
+    
+    public boolean existeLocalConClasificacion(Clasificacion clasificacion) {
+        for (Local local : locales) {
+            if (local.getTipoLocal() == clasificacion) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    public Local getPrimerLocalPorClasificacion(Clasificacion clasificacion) {
+        for (Local local : locales) {
+            if (local.getTipoLocal() == clasificacion) {
+                return local;
+            }
+        }
+        return null;
+    }
+    
+    
+    //BUSCAR PERSONA
+    public Persona buscarPersona(String carnet) {
+        for (Persona persona : personas) {
+            if (persona.getNumID().equals(carnet)) {
+                return persona;
+            }
+        }
+        return null;
+    }
+    
     //AGREGAR LOCAL
      public void agregarLocal(Local local) { 
     	locales.add(local);  	
     }
-     //AGREGAR PERSONA
+     
      public void agregarPersona(Persona persona) { 
      	personas.add(persona); 
      }
     
      //VERIFICAR EL ACCESO AL LOCAL
      public boolean verificarAcceso(Local local, Persona persona) {
-    	 boolean  encontrar;
+    	 
     	    if (!buscarLocal(local.getId())) {
     	    encontrar= false;
-    	    }else{
-                encontrar=revisarAcceso(persona, local, LocalDateTime.now());
-            }
-    	    return encontrar;
+    	    }
+    	    return encontrar=revisarAcceso(persona, local, LocalDateTime.now());
     	}
     
     
@@ -169,7 +200,5 @@ public class Facultad {
         return resultado;
     }
     
-
-
 
 }

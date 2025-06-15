@@ -1,8 +1,8 @@
 package dpooFinal.logica;
 
 public abstract class Persona {
-
-    protected String nombre;
+	
+	protected String nombre;
 	protected String apellido;
 	protected String numID;
 	protected TipoPersonal tipo;
@@ -36,7 +36,14 @@ public abstract class Persona {
 	}
 	public void setNumID(String numID) {
 		this.numID = numID;
+		
 	}
+	
+	public String getNombreCompleto() {
+	    return nombre + " " + apellido;
+	}
+	
+	
 
 	public abstract TipoPersonal getTipo();
 	
