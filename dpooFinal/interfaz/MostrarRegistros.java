@@ -198,7 +198,7 @@ public class MostrarRegistros extends JDialog {
             txtSalida.setText(registro.getHoraSalida().format(formatter));
         }
         
-        panel.add(new JLabel("Hora de Salida (D/M/A-HH:mm):"));
+        panel.add(new JLabel("Hora de Salida (D/M/Agit add dpooFinal/-HH:mm):"));
         panel.add(txtSalida);
         
         int result = JOptionPane.showConfirmDialog(this, panel, "Modificar Registro", 
