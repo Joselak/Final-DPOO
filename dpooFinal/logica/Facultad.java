@@ -9,14 +9,21 @@ public class Facultad {
 	
 	private ArrayList<Local>locales;
 	private ArrayList<Persona>personas;
-	boolean  encontrar;
+    boolean encontrar;
 
+	private static Facultad instancia;
 	
-    public Facultad() {
+    private Facultad() {
         locales = new ArrayList<>();
         personas = new ArrayList<>();
     }
  
+    public static Facultad getInstancia() {
+        if (instancia == null) {
+            instancia = new Facultad();
+        }
+        return instancia;
+    }
     
     
     public ArrayList<Local> getLocales() {

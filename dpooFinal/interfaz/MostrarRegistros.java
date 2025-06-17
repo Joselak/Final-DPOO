@@ -6,7 +6,6 @@ import dpooFinal.logica.Local;
 import dpooFinal.logica.Registro;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -60,7 +59,12 @@ public class MostrarRegistros extends JDialog {
         contentPanel.add(panelResultados);
         
         model = new DefaultTableModel() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -102,28 +106,29 @@ public class MostrarRegistros extends JDialog {
         btnModificar.setBounds(372, 330, 89, 23);
         contentPanel.add(btnModificar);
         
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
-        
         JButton btnMostrar = new JButton("Mostrar");
+        btnMostrar.setBounds(279, 330, 83, 23);
+        contentPanel.add(btnMostrar);
         btnMostrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarRegistros();
             }
         });
         btnMostrar.setActionCommand("OK");
-        buttonPane.add(btnMostrar);
         getRootPane().setDefaultButton(btnMostrar);
         
         JButton btnSalir = new JButton("Salir");
         btnSalir.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
+        	public void actionPerformed(ActionEvent e) {
+        		dispose();
+        	}
         });
-        btnSalir.setActionCommand("Cancel");
-        buttonPane.add(btnSalir);
+        btnSalir.setBounds(243, 413, 89, 23);
+        contentPanel.add(btnSalir);
+        
+        JPanel buttonPane = new JPanel();
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        buttonPane.setLayout(null);
         
         setLocationRelativeTo(null);
     }
@@ -133,82 +138,84 @@ public class MostrarRegistros extends JDialog {
     }
     
     private void mostrarRegistros() {
-        model.setRowCount(0);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
+        model.setRowCount(0); // Limpiar tabla antes de mostrar
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         
+        // Recorrer todos los locales y sus registros
         for (Local local : facultad.getLocales()) {
             for (Registro registro : local.getRegistros()) {
-                String horaEntrada = registro.getHoraEntrada() != null ? 
-                    registro.getHoraEntrada().format(formatter) : "N/A";
-                String horaSalida = registro.getHoraSalida() != null ? 
-                    registro.getHoraSalida().format(formatter) : "N/A";
-                
                 model.addRow(new Object[]{
                     registro.getPersona().getNumID(),
-                    registro.getPersona().getNombre() + " " + registro.getPersona().getApellido(),
+                    registro.getPersona().getNombreCompleto(),
                     local.getId(),
-                    horaEntrada,
-                    horaSalida,
-                    registro  // Almacenar objeto Registro en columna oculta
+                    registro.getHoraEntrada().format(formatter),
+                    registro.getHoraSalida() != null ? registro.getHoraSalida().format(formatter) : "Pendiente",
+                    registro // Guardar objeto para operaciones posteriores
                 });
             }
         }
     }
-    
+
     private void eliminarRegistro() {
-        int filaSeleccionada = tableResultados.getSelectedRow();
-        if (filaSeleccionada == -1) {
+        int fila = tableResultados.getSelectedRow();
+        if (fila < 0) {
             JOptionPane.showMessageDialog(this, "Seleccione un registro", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        Registro registro = (Registro) model.getValueAt(filaSeleccionada, 5);
-        int confirm = JOptionPane.showConfirmDialog(this, 
-                "¿Está seguro de eliminar este registro?", 
-                "Confirmar eliminación", 
-                JOptionPane.YES_NO_OPTION);
+        Registro registro = (Registro) model.getValueAt(fila, 5);
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this, 
+            "¿Eliminar registro de " + registro.getPersona().getNombreCompleto() + "?", 
+            "Confirmar", 
+            JOptionPane.YES_NO_OPTION
+        );
         
-        if (confirm == JOptionPane.YES_OPTION) {
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Buscar y eliminar el registro de su local correspondiente
             for (Local local : facultad.getLocales()) {
                 if (local.getRegistros().remove(registro)) {
-                    model.removeRow(filaSeleccionada);
+                    model.removeRow(fila);
                     JOptionPane.showMessageDialog(this, "Registro eliminado");
                     return;
                 }
             }
-            JOptionPane.showMessageDialog(this, "No se encontró el registro", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo eliminar el registro", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void modificarRegistro() {
-        int filaSeleccionada = tableResultados.getSelectedRow();
-        if (filaSeleccionada == -1) {
+        int fila = tableResultados.getSelectedRow();
+        if (fila < 0) {
             JOptionPane.showMessageDialog(this, "Seleccione un registro", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        Registro registro = (Registro) model.getValueAt(filaSeleccionada, 5);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy-HH:mm");
-        
-        // Crear formulario de modificación
-        JPanel panel = new JPanel(new GridLayout(0, 1));
-        
+        Registro registro = (Registro) model.getValueAt(fila, 5);
+        JPanel panel = new JPanel(new GridLayout(2, 1));
         JTextField txtSalida = new JTextField();
+        
         if (registro.getHoraSalida() != null) {
-            txtSalida.setText(registro.getHoraSalida().format(formatter));
+            txtSalida.setText(registro.getHoraSalida().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         }
         
-        panel.add(new JLabel("Hora de Salida (D/M/Agit add dpooFinal/-HH:mm):"));
+        panel.add(new JLabel("Nueva hora de salida (D/M/A H:m):"));
         panel.add(txtSalida);
         
-        int result = JOptionPane.showConfirmDialog(this, panel, "Modificar Registro", 
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int opcion = JOptionPane.showConfirmDialog(
+            this, 
+            panel, 
+            "Modificar Registro", 
+            JOptionPane.OK_CANCEL_OPTION
+        );
         
-        if (result == JOptionPane.OK_OPTION) {
+        if (opcion == JOptionPane.OK_OPTION) {
             try {
-                LocalDateTime nuevaSalida = LocalDateTime.parse(txtSalida.getText(), formatter);
+                LocalDateTime nuevaSalida = LocalDateTime.parse(txtSalida.getText(), 
+                    DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                
                 registro.setHoraSalida(nuevaSalida);
-                mostrarRegistros(); // Actualizar tabla
+                mostrarRegistros(); // Refrescar la tabla
                 JOptionPane.showMessageDialog(this, "Registro actualizado");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Formato de fecha inválido", "Error", JOptionPane.ERROR_MESSAGE);
@@ -216,6 +223,4 @@ public class MostrarRegistros extends JDialog {
         }
     }
 }
-
-
 

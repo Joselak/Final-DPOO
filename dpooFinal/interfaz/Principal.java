@@ -544,7 +544,7 @@ public class Principal extends JFrame {
     }
     
     private Facultad inicializarDatosPrueba() {
-        Facultad f = new Facultad();
+        Facultad f = Facultad.getInstancia();
         
         // PERSONAS CREADAS
         //ESTUDIANTES

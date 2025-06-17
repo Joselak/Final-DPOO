@@ -10,7 +10,7 @@ public class Main {
         
 
         //CREACION DE LA FACULTAD
-		Facultad f = new Facultad();
+		Facultad f = Facultad.getInstancia();
 		
 		/*
 		Profesor responsable = new Profesor("Juan", "Pérez", "123456789",TipoPersonal.Profesor,"Informática", "Titular", "Doctor", "Indeterminado");

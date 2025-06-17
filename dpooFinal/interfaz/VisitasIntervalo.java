@@ -50,7 +50,7 @@ public class VisitasIntervalo extends JDialog {
 	public static void main(String[] args) {
 		
 		try {
-			Facultad facultad = new Facultad();
+			Facultad facultad = Facultad.getInstancia();
 			VisitasIntervalo dialog = new VisitasIntervalo(facultad);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
