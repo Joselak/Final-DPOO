@@ -10,6 +10,7 @@ import dpooFinal.logica.TipoPersonal;
 import dpooFinal.logica.Directivo;
 import dpooFinal.logica.Estudiante;
 import dpooFinal.logica.Profesor;
+import dpooFinal.logica.Tecnico;
 import dpooFinal.logica.Visitante;
 
 import java.awt.Color;
@@ -75,6 +76,8 @@ public class Principal extends JFrame {
         setTitle("Gestor de Accesos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 657, 503);
+        setResizable(false);
+
         
         // INICIALIZAR FACULTAD 		
         facultad = inicializarDatosPrueba();
@@ -214,7 +217,7 @@ public class Principal extends JFrame {
         contentPane.add(panel_2);
         
         comboBox_3 = new JComboBox<TipoPersonal>();
-        comboBox_3.setModel(new DefaultComboBoxModel(TipoPersonal.values()));
+        comboBox_3.setModel(new DefaultComboBoxModel<TipoPersonal>(TipoPersonal.values()));
         comboBox_3.setBounds(28, 32, 145, 20);
         panel_2.add(comboBox_3);
         
@@ -229,7 +232,12 @@ public class Principal extends JFrame {
         comboBox_2.setBounds(29, 34, 145, 20);
         panel_3.add(comboBox_2);
         comboBox_2.setRenderer(new DefaultListCellRenderer() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public Component getListCellRendererComponent(JList<?> list, Object value, 
                     int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -311,6 +319,9 @@ public class Principal extends JFrame {
     
     private void buscarPersonaPorCarnet() {
         String carnet = textField_2.getText().trim();
+        
+        
+        
         if (!carnet.isEmpty()) {
             Persona persona = facultad.buscarPersona(carnet);
             if (persona != null && persona.getTipo() != TipoPersonal.Visitante) {
@@ -324,8 +335,15 @@ public class Principal extends JFrame {
                         "No se encontró personal con ese carnet", 
                         "Error", JOptionPane.WARNING_MESSAGE);
                 }
+                if (!textField_2.getText().matches("^\\d{11}$")) {
+                    JOptionPane.showMessageDialog(this,
+                        "Carnet inválido: debe contener exactamente 11 dígitos numéricos",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         }
+        
     }
     
     private void limpiarCamposPersona() {
@@ -341,7 +359,12 @@ public class Principal extends JFrame {
         
         // Configurar cómo se muestran las clasificaciones
         comboBox_2.setRenderer(new DefaultListCellRenderer() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public Component getListCellRendererComponent(JList<?> list, Object value, 
                     int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -382,13 +405,14 @@ public class Principal extends JFrame {
     private void registrarAcceso() {
         String carnet = textField_2.getText().trim();
         Clasificacion clasificacionSeleccionada = (Clasificacion) comboBox_2.getSelectedItem();
-        Local localSeleccionado = facultad.getPrimerLocalPorClasificacion(clasificacionSeleccionada);
+           
         
-        if (localSeleccionado == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione un local válido", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
+     // Generar un nuevo nombre para el local
+        String nombreLocal = generarNombreLocal(clasificacionSeleccionada);
+        Local nuevoLocal = new Local(nombreLocal, clasificacionSeleccionada);
+        facultad.agregarLocal(nuevoLocal);
+                
+            
         if (rdbtnPersonal.isSelected()) {
             if (carnet.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Ingrese el carnet del personal", "Error", JOptionPane.ERROR_MESSAGE);
@@ -401,7 +425,7 @@ public class Principal extends JFrame {
                 return;
             }
             
-            if (!facultad.verificarAcceso(localSeleccionado, persona)) {
+            if (!facultad.verificarAcceso(nuevoLocal, persona)) {
                 JOptionPane.showMessageDialog(this, 
                     "Acceso denegado: esta persona no puede entrar a este local", 
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -411,7 +435,7 @@ public class Principal extends JFrame {
             LocalDateTime horaEntrada = LocalDateTime.now();
             LocalDateTime horaSalida = calcularHoraSalida(persona);
             
-            localSeleccionado.registrarAcceso(persona, horaEntrada, horaSalida);
+            nuevoLocal.registrarAcceso(persona, horaEntrada, horaSalida);
             
             JOptionPane.showMessageDialog(this, 
                 "Acceso registrado para: " + persona.getNombreCompleto() + 
@@ -426,14 +450,23 @@ public class Principal extends JFrame {
             if (carnet.isEmpty() || nombre.isEmpty() || apellido.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Complete todos los campos del visitante", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
+            }else{
+            	if (!validarNombreApellido(nombre) || !validarNombreApellido(apellido)) {
+                    JOptionPane.showMessageDialog(this,
+                        "Nombre inválido: solo letras, espacios y máximo 50 caracteres.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return ;
+                }
             }
+            
+            
             
             Visitante visitante = new Visitante(
                 nombre, apellido, carnet, TipoPersonal.Visitante, 
                 "Visita", "Institución no especificada", "Contacto no especificado"
             );
             
-            if (!facultad.verificarAcceso(localSeleccionado, visitante)) {
+            if (!facultad.verificarAcceso(nuevoLocal, visitante)) {
                 JOptionPane.showMessageDialog(this, 
                     "Acceso denegado: los visitantes solo pueden acceder en horario de 8:00 a 12:00", 
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -444,7 +477,7 @@ public class Principal extends JFrame {
             LocalDateTime horaSalida = calcularHoraSalida(visitante);
             
             facultad.agregarPersona(visitante);
-            localSeleccionado.registrarAcceso(visitante, horaEntrada, horaSalida);
+            nuevoLocal.registrarAcceso(visitante, horaEntrada, horaSalida);
             
             JOptionPane.showMessageDialog(this, 
                 "Acceso registrado para visitante: " + nombre + " " + apellido + 
@@ -459,6 +492,44 @@ public class Principal extends JFrame {
         
         limpiarCampos();
     }
+    
+    
+    private boolean validarNombreApellido(String texto) {
+        // Verifica que el texto no esté vacío, solo contenga letras y tenga <= 50 caracteres
+        return texto.matches("^[\\p{L} .'-]{1,50}$");
+    }
+    
+    
+    
+    //METODO PARA GENERAR NOMBRES PARA LOS LOCALES
+    private String generarNombreLocal(Clasificacion clasificacion) {
+        // Genera un nombre de local basado en la clasificación y un número aleatorio
+        String prefijo;
+        switch (clasificacion) {
+            case Aula:
+                prefijo = "AULA";
+                break;
+            case Laboratorios:
+                prefijo = "LAB";
+                break;
+            case Decano:
+                prefijo = "DEC";
+                break;
+            case Estudiantes:
+                prefijo = "ESTU";
+                break;
+            case Servidores:
+                prefijo = "SERV";
+                break;
+            default:
+                prefijo = "LOCAL";
+        }
+        // Genera un número aleatorio entre 100 y 999 para el sufijo
+        int sufijo = 100 + (int) (Math.random() * 900);
+        return prefijo + "-" + sufijo;
+    }
+
+    
     
     private void limpiarCampos() {
         textField_2.setText("");
@@ -476,17 +547,23 @@ public class Principal extends JFrame {
         Facultad f = new Facultad();
         
         // PERSONAS CREADAS
+        //ESTUDIANTES
         Estudiante estudiante = new Estudiante("Ana", "González", "987654321", TipoPersonal.Estudiante, 2, 1);
+        //PROFESORES
         Profesor profesor = new Profesor("Carlos", "Martínez", "456123789", TipoPersonal.Profesor, "Informática", "Asistente", "Máster", "Determinado");
-        Visitante visitante = new Visitante("Luis", "Rodríguez", "789456123", TipoPersonal.Visitante, "Reunión", "Facultad de Derecho","Alejandro");
+        //DIRECTIVOS
         Directivo directivo = new Directivo("María", "López", "123456789", TipoPersonal.Directivo, "Dirección", "Titular", "Doctor", "Indeterminado", "Directora", "Académica");
+        //ADMINISTRATIVOS
         Administrativo administrativo = new Administrativo("Pedro", "Sánchez", "321654987", TipoPersonal.Administrativo, "Contabilidad");
+        
+        
+        Tecnico especialista = new Tecnico("Alejandro", "Gonzales", "05011055892",TipoPersonal.Especialista,"Tesis");
         
         f.agregarPersona(estudiante);
         f.agregarPersona(profesor);
-        f.agregarPersona(visitante);
         f.agregarPersona(directivo);
         f.agregarPersona(administrativo);
+        f.agregarPersona(especialista);
         
         // LOCALES CREADOS
         Local aula1 = new Local("AULA-101", Clasificacion.Aula);
@@ -506,7 +583,6 @@ public class Principal extends JFrame {
         aula1.registrarAcceso(directivo, LocalDateTime.of(2025, 1, 10, 10, 21), LocalDateTime.of(2025, 1, 10, 12, 30));
         labInformatica.registrarAcceso(estudiante, LocalDateTime.of(2025, 1, 10, 10, 21), LocalDateTime.of(2025, 1, 10, 11, 30));
         decanato.registrarAcceso(directivo, LocalDateTime.of(2025, 1, 10, 15, 21), LocalDateTime.of(2025, 1, 10, 15, 30));
-        estudiantes.registrarAcceso(visitante, LocalDateTime.of(2025, 5, 29, 11, 0),LocalDateTime.of(2025, 5, 29, 12, 0));
         servidores.registrarAcceso(administrativo,  LocalDateTime.of(2025, 5, 29, 10, 30),LocalDateTime.of(2025, 5, 29, 15, 0));
         
         return f;
