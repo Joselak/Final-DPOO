@@ -488,7 +488,19 @@ public class AnadirPersona extends JDialog {
                 JOptionPane.showMessageDialog(this, "Nombre, apellidos e identidad son obligatorios", 
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else if (comboBoxTipo.getSelectedItem() == null) {
+            }else if(!validarNombreApellido(txtNombre) || !validarNombreApellido(txtApellidos)){
+            	JOptionPane.showMessageDialog(this,
+                        "Nombre inválido",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return ;
+                    
+            } else if (!txtIdentidad.getText().matches("^\\d{11}$")){
+            	JOptionPane.showMessageDialog(this,
+                        "Carnet inválido: debe contener 11 dígitos numéricos",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+            	
+            }else if (comboBoxTipo.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this, "Seleccione un tipo de persona", 
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -568,5 +580,11 @@ public class AnadirPersona extends JDialog {
                 throw new IllegalArgumentException("Tipo de persona no soportado: " + tipo);
         }
     }
+    
+    private boolean validarNombreApellido(JTextField txtNombre2) {
+        // Verifica que el texto no esté vacío, solo contenga letras y tenga <= 50 caracteres
+        return txtNombre2.getText().matches("^[\\p{L} .'-]{1,50}$");
+    }
+    
 }
 
