@@ -180,6 +180,17 @@ public class Principal extends JFrame {
         menuBar.add(mnAyuda);
         
         JMenuItem menuItem = new JMenuItem("Horario de accesos");
+        menuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+        			HorarioAcceso dialog = new HorarioAcceso();
+        			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        			dialog.setVisible(true);
+        		} catch (Exception e2) {
+        			e2.printStackTrace();
+        		}
+        	}
+        });
         mnAyuda.add(menuItem);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
