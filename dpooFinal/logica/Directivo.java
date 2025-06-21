@@ -1,8 +1,8 @@
 package dpooFinal.logica;
 
 public class Directivo extends Profesor{
-
-    private String area;
+	
+	private String area;
 	private String cargo;
 	
 	
@@ -11,8 +11,8 @@ public class Directivo extends Profesor{
 		super(nombre, apellido, numID,tipo, departamento, categDocente, categCientifica,
 				tipoContrato);
 		
-		this.area=area;
-		this.cargo=cargo;
+		setArea(area);
+		setCargo(cargo);
 		
 	}
 
@@ -22,7 +22,11 @@ public class Directivo extends Profesor{
 	}
 
 	public void setArea(String area) {
+		if(area.isEmpty()|| area==null){
+			new Exception("Error");
+		}else{
 		this.area = area;
+		}
 	}
 
 
@@ -31,6 +35,9 @@ public class Directivo extends Profesor{
 	}
 
 	public void setCargo(String cargo) {
+		if(cargo.isEmpty()|| cargo==null){
+			new Exception("Error");
+		}
 		this.cargo = cargo;
 	}
 	

@@ -1,13 +1,13 @@
 package dpooFinal.logica;
 
-public class Tecnico extends Persona{
-
-    private String plaza;
+public class Tecnico extends Persona {
+	
+	private String plaza;
 
 	public Tecnico(String nombre, String apellido, String numID,TipoPersonal tipo,String plaza) {
 		super(nombre, apellido, numID,tipo);
 
-		this.plaza=plaza;
+		setPlaza(plaza);
 	}
 
 	public String getPlaza() {
@@ -15,13 +15,18 @@ public class Tecnico extends Persona{
 	}
 
 	public void setPlaza(String plaza) {
+		if(plaza.isEmpty() || plaza==null){
+			new Exception("Error");
+		}else{
 		this.plaza = plaza;
+		}
 	}
 
 	@Override
 	public TipoPersonal getTipo() {
 		return TipoPersonal.Tecnico;
 	}
+	
 	
 
 }

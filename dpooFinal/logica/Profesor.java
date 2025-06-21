@@ -1,8 +1,9 @@
 package dpooFinal.logica;
 
-public class Profesor extends Persona{
+public class Profesor extends Persona {
+	
 
-    protected String departamento;
+	protected String departamento;
 	protected String categDocente;
 	protected String categCientifica;
 	protected String tipoContrato;
@@ -12,10 +13,10 @@ public class Profesor extends Persona{
 			String tipoContrato) {
 		super(nombre, apellido, numID,tipo);
 		
-		this.departamento = departamento;
-		this.categDocente = categDocente;
-		this.categCientifica = categCientifica;
-		this.tipoContrato = tipoContrato;
+		setDepartamento(departamento);
+		setCategDocente(categDocente);
+		setCategCientifica(categCientifica);
+		setTipoContrato(tipoContrato);
 		
 	}
 
@@ -26,7 +27,11 @@ public class Profesor extends Persona{
 	}
 
 	public void setDepartamento(String departamento) {
+		if(departamento.isEmpty() || departamento==null){
+			new Exception("Error");
+		}else{
 		this.departamento = departamento;
+		}
 	}
 
 	
@@ -35,7 +40,11 @@ public class Profesor extends Persona{
 	}
 
 	public void setCategDocente(String categDocente) {
+		if(categDocente.isEmpty() || categDocente==null){
+			new Exception("Error");
+		}else{
 		this.categDocente = categDocente;
+		}
 	}
 
 	
@@ -44,7 +53,11 @@ public class Profesor extends Persona{
 	}
 
 	public void setCategCientifica(String categCientifica) {
+		if(categCientifica.isEmpty() || categCientifica==null){
+			new Exception("Error");
+		}else{
 		this.categCientifica = categCientifica;
+		}
 	}
 
 	
@@ -53,7 +66,11 @@ public class Profesor extends Persona{
 	}
 
 	public void setTipoContrato(String tipoContrato) {
+		if(tipoContrato.isEmpty() || tipoContrato==null){
+			new Exception("Error");
+		}else{
 		this.tipoContrato = tipoContrato;
+		}
 	}
 
 
@@ -62,5 +79,8 @@ public class Profesor extends Persona{
 	public TipoPersonal getTipo() {
 		return TipoPersonal.Profesor;
 	}
+	
+	
+	
 
 }

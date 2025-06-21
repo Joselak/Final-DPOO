@@ -1,13 +1,13 @@
 package dpooFinal.logica;
 
-public class Administrativo  extends Persona{
-
-    private String plaza;
+public class Administrativo extends Persona {
+	
+	private String plaza;
 
 	public Administrativo(String nombre, String apellido, String numID,TipoPersonal tipo,String plaza) {
 		super(nombre, apellido, numID,tipo);
 		
-		this.plaza=plaza;
+		setPlaza(plaza);
 	}
 
 	public String getPlaza() {
@@ -15,7 +15,11 @@ public class Administrativo  extends Persona{
 	}
 
 	public void setPlaza(String plaza) {
+		if(plaza.isEmpty() || plaza==null){
+			new Exception("Error");
+		}else{
 		this.plaza = plaza;
+		}
 	}
 
 	@Override
@@ -23,7 +27,5 @@ public class Administrativo  extends Persona{
 		return TipoPersonal.Administrativo;
 	}
 
-	
-	
-	
+
 }

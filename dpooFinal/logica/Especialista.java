@@ -1,13 +1,13 @@
 package dpooFinal.logica;
 
-public class Especialista extends Persona{
-
-    private String proyecto;
+public class Especialista extends Persona {
+	
+	private String proyecto;
 
 	public Especialista(String nombre, String apellido, String numID ,TipoPersonal tipo,String proyecto) {
 		super(nombre, apellido, numID,tipo);
 		
-		this.proyecto=proyecto;
+		setProyecto(proyecto);
 
 	}
 
@@ -16,6 +16,9 @@ public class Especialista extends Persona{
 	}
 
 	public void setProyecto(String proyecto) {
+		if(proyecto.isEmpty() || proyecto==null){
+			new Exception("Error");
+		}
 		this.proyecto = proyecto;
 	}
 
@@ -23,6 +26,7 @@ public class Especialista extends Persona{
 	public TipoPersonal getTipo() {
 		return TipoPersonal.Especialista;
 	}
+	
 	
 
 }
