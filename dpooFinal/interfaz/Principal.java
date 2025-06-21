@@ -120,30 +120,6 @@ public class Principal extends JFrame {
         });
         mnNewMenu.add(mntmAadirRegistro);
         
-        JMenu mnConsultar = new JMenu("Consultar");
-        menuBar.add(mnConsultar);
-        
-        JMenu mnReportes = new JMenu("Reportes");
-        mnConsultar.add(mnReportes);
-        
-        JMenuItem mntmVisitasALocales = new JMenuItem("Visitas en un intervalos");
-        mntmVisitasALocales.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    VisitasIntervalo dialog = new VisitasIntervalo(facultad);
-                    dialog.setFacultad(facultad);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
-        mnReportes.add(mntmVisitasALocales);
-        
-        JMenuItem mntmLocalesPorPersona = new JMenuItem("Visitas por una persona");
-        mnReportes.add(mntmLocalesPorPersona);
-        
         JMenu mnBuscar = new JMenu("Buscar");
         mnBuscar.addActionListener(new ActionListener() {
             @Override
@@ -167,6 +143,38 @@ public class Principal extends JFrame {
             }
         });
         mnBuscar.add(mntmBusquedaPor);
+        
+        JMenu mnConsultar = new JMenu("Reportes");
+        menuBar.add(mnConsultar);
+        
+        JMenuItem mntmVisitasALocales = new JMenuItem("Visitas en un intervalos");
+        mnConsultar.add(mntmVisitasALocales);
+        
+        JMenuItem mntmLocalesPorPersona = new JMenuItem("Visitas por una persona");
+        mnConsultar.add(mntmLocalesPorPersona);
+        mntmLocalesPorPersona.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+        			PersonaVisita dialog = new PersonaVisita(facultad);
+        			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        			dialog.setVisible(true);
+        		} catch (Exception e2) {
+        			e2.printStackTrace();
+        		}
+        	}
+        });
+        mntmVisitasALocales.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    VisitasIntervalo dialog = new VisitasIntervalo(facultad);
+                    dialog.setFacultad(facultad);
+                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    dialog.setVisible(true);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         
         JMenu mnAyuda = new JMenu("Ayuda");
         menuBar.add(mnAyuda);
@@ -584,7 +592,7 @@ public class Principal extends JFrame {
         Profesor profesor3 = new Profesor("José", "Hernández", "74185296311", TipoPersonal.Profesor, "Física", "Titular", "Máster", "Determinado");
         //DIRECTIVOS
         Directivo directivo = new Directivo("María", "López", "12345678977", TipoPersonal.Directivo, "Dirección", "Titular", "Doctor", "Indeterminado", "Directora", "Académica");
-        Directivo directivo2 = new Directivo("Raúl", "Castro", "96325874100", TipoPersonal.Directivo, "Vicedirección", "Asistente", "Máster", "Determinado", "Vicedirector", "Investigación");
+        Directivo directivo2 = new Directivo("Raúl", "Hernández", "96325874100", TipoPersonal.Directivo, "Vicedirección", "Asistente", "Máster", "Determinado", "Vicedirector", "Investigación");
         Directivo directivo3 = new Directivo("Teresa", "Mendoza", "85296374122", TipoPersonal.Directivo, "Planificación", "Titular", "Doctor", "Indeterminado", "Coordinadora", "Académica");
         //ADMINISTRATIVOS
         Administrativo administrativo = new Administrativo("Pedro", "Sánchez", "32165498711", TipoPersonal.Administrativo, "Contabilidad");
