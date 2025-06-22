@@ -36,8 +36,10 @@ public class MostrarRegistros extends JDialog {
     private final JPanel contentPanel = new JPanel();
 
     public static void main(String[] args) {
+    	
             try {
-                MostrarRegistros dialog = new MostrarRegistros();
+            	Facultad facultad = Facultad.getInstancia();
+                MostrarRegistros dialog = new MostrarRegistros(facultad);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
             } catch (Exception e) {
@@ -45,8 +47,10 @@ public class MostrarRegistros extends JDialog {
             }
         
     }
+    
+    
 
-    public MostrarRegistros() {
+    public MostrarRegistros(Facultad facultad) {
         setTitle("Tabla de registros");
         setBounds(100, 100, 595, 500);
         getContentPane().setLayout(new BorderLayout());
@@ -54,6 +58,7 @@ public class MostrarRegistros extends JDialog {
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
         setResizable(false);
+        setFacultad(facultad);
 
         JPanel panelResultados = new JPanel(new BorderLayout());
         panelResultados.setBounds(10, 60, 550, 250);
@@ -107,17 +112,7 @@ public class MostrarRegistros extends JDialog {
         btnModificar.setBounds(372, 330, 89, 23);
         contentPanel.add(btnModificar);
         
-        JButton btnMostrar = new JButton("Mostrar");
-        btnMostrar.setBounds(279, 330, 83, 23);
-        contentPanel.add(btnMostrar);
-        btnMostrar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                mostrarRegistros();
-            }
-        });
-        btnMostrar.setActionCommand("OK");
-        getRootPane().setDefaultButton(btnMostrar);
-        
+       
         JButton btnSalir = new JButton("Salir");
         btnSalir.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -132,8 +127,11 @@ public class MostrarRegistros extends JDialog {
         buttonPane.setLayout(null);
         
         setLocationRelativeTo(null);
+        
+        mostrarRegistros();
     }
 
+    
     public void setFacultad(Facultad facultad) {
         this.facultad = facultad;
     }

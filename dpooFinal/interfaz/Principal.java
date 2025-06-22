@@ -94,7 +94,7 @@ public class Principal extends JFrame {
         mntmMostrarRegistros.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    MostrarRegistros dialog = new MostrarRegistros();
+                    MostrarRegistros dialog = new MostrarRegistros(facultad);
                     dialog.setFacultad(facultad);
                     dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                     dialog.setVisible(true);
