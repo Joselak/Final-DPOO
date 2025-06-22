@@ -50,7 +50,9 @@ public class VisitasIntervalo extends JDialog {
 	public static void main(String[] args) {
 		
 		try {
+			//INSTANCIA DE FACULTAD
 			Facultad facultad = Facultad.getInstancia();
+			
 			VisitasIntervalo dialog = new VisitasIntervalo(facultad);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -68,11 +70,12 @@ public class VisitasIntervalo extends JDialog {
 	public VisitasIntervalo(Facultad facultad) {
 		setTitle("Visitas en intervalo");
 		
-		setBounds(100, 100, 588, 452);
+		setBounds(100, 100, 657, 503);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		setResizable(false);
 		{
 			  // PANEL SUPERIOR CON CONTROLES
 	        JPanel panelControles = new JPanel();
@@ -121,11 +124,11 @@ public class VisitasIntervalo extends JDialog {
 	        
 	     // SELECCIONAR FECHA
 	        JLabel lblFecha = new JLabel("Fecha:");
-	        lblFecha.setBounds(10, 34, 80, 20);
+	        lblFecha.setBounds(10, 51, 80, 20);
 	        panelControles.add(lblFecha);
 	        
 	        spinnerFecha = new JSpinner(new SpinnerDateModel());
-	        spinnerFecha.setBounds(55, 34, 120, 20);
+	        spinnerFecha.setBounds(55, 51, 120, 20);
 	        panelControles.add(spinnerFecha);
 	        JSpinner.DateEditor fechaEditor = new JSpinner.DateEditor(spinnerFecha, "dd/MM/yyyy");
 	        spinnerFecha.setEditor(fechaEditor);
@@ -133,7 +136,7 @@ public class VisitasIntervalo extends JDialog {
 
 	        // MOSTRAR RESULTADOS
 	        JScrollPane scrollPane = new JScrollPane();
-	        scrollPane.setBounds(20, 150, 523, 230);
+	        scrollPane.setBounds(20, 150, 596, 260);
 	        contentPanel.add(scrollPane);
 
 	        tableResultados = new JTable();
@@ -162,8 +165,9 @@ public class VisitasIntervalo extends JDialog {
 	}
 	
 	public void setFacultad(Facultad facultad) {
-		this.facultad = facultad;
-	}
+        this.facultad = facultad;
+    }
+	
 
 	private void generarReporte() {
 	    try {
@@ -213,4 +217,7 @@ public class VisitasIntervalo extends JDialog {
 	    }
 	}
 
+	
+	
+	
 }

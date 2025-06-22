@@ -53,6 +53,7 @@ public class MostrarRegistros extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
+        setResizable(false);
 
         JPanel panelResultados = new JPanel(new BorderLayout());
         panelResultados.setBounds(10, 60, 550, 250);
@@ -137,6 +138,8 @@ public class MostrarRegistros extends JDialog {
         this.facultad = facultad;
     }
     
+    
+    //MOSTRAR LOS EGISTROS REALIZADOS
     private void mostrarRegistros() {
         model.setRowCount(0); // Limpiar tabla antes de mostrar
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -156,6 +159,7 @@ public class MostrarRegistros extends JDialog {
         }
     }
 
+    //ELIMINAR UN REGISTRO
     private void eliminarRegistro() {
         int fila = tableResultados.getSelectedRow();
         if (fila < 0) {
@@ -183,7 +187,9 @@ public class MostrarRegistros extends JDialog {
             JOptionPane.showMessageDialog(this, "No se pudo eliminar el registro", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
+    
+    //MODIFICAR UN REGISTRO
     private void modificarRegistro() {
         int fila = tableResultados.getSelectedRow();
         if (fila < 0) {
@@ -223,4 +229,5 @@ public class MostrarRegistros extends JDialog {
         }
     }
 }
+
 

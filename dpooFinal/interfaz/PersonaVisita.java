@@ -113,17 +113,19 @@ public class PersonaVisita extends JDialog {
     }
 
     private void buscarLocalesVisitados() {
+    	boolean encontrado=true;
+    	
         String carnet = textFieldCarnet.getText().trim();
         
         if (carnet.isEmpty()) {
             textAreaResultados.setText("Por favor ingrese un número de carnet");
-            return;
+            encontrado=false;
         }
         
         // Verificar si la persona existe
         if (facultad.buscarPersona(carnet) == null) {
             textAreaResultados.setText("No se encontró una persona con el carnet: " + carnet);
-            return;
+            encontrado=false;
         }
         
         Date fechaInicio = (Date) spinnerInicio.getValue();
@@ -131,8 +133,13 @@ public class PersonaVisita extends JDialog {
         
         if (fechaInicio.after(fechaFin)) {
             textAreaResultados.setText("La fecha de inicio debe ser anterior a la fecha fin");
+            encontrado=false;
+        }
+        
+        if (!encontrado) {
             return;
         }
+
         
         // Convertir a LocalDateTime (ajustando horas para cubrir todo el día)
         LocalDateTime inicioDateTime = fechaInicio.toInstant().atZone(ZoneId.systemDefault())
@@ -203,7 +210,5 @@ public class PersonaVisita extends JDialog {
         }
     }
 
-    public void setFacultad(Facultad facultad) {
-        this.facultad = facultad;
-    }
+    
 }

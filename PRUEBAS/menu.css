@@ -1,0 +1,36 @@
+.menuTaggle{
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 2em;
+        transition: transform
+        1.5s;
+}
+
+.menu.active .menuTaggle{
+    transform: rotate(315deg);
+}
+
+.menu li as{
+    display: flex;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5em;
+    transform: rotate(calc
+    (360deg/-8*var(--i)));
+    transition: 1s;
+    transition-delay: 0.5s;
+    color: transparent;
+}
+
+.menu.active li a{
+    color: var(--clr);
+}

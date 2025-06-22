@@ -95,6 +95,7 @@ public class Busqueda extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
+        setResizable(false);
         
         // PANEL QUE CONTIENE A LOS DEMAS
         cardLayout = new CardLayout();
@@ -135,7 +136,6 @@ public class Busqueda extends JDialog {
         
         // TABLA PARA LOS RESULTADOS
         tableModel = new DefaultTableModel();
-        
         tableModel.addColumn("ID");
         tableModel.addColumn("Nombre");
         tableModel.addColumn("Tipo");
@@ -151,7 +151,7 @@ public class Busqueda extends JDialog {
         tableModel.fireTableDataChanged();
         tableResultados.revalidate();
         tableResultados.repaint();
-    
+        
         // PANEL DE BOTONES
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -174,8 +174,6 @@ public class Busqueda extends JDialog {
         okButton.setActionCommand("OK");
         buttonPane.add(okButton);
         getRootPane().setDefaultButton(okButton);
-        
-        
         
         setLocationRelativeTo(null);
         
@@ -238,7 +236,7 @@ public class Busqueda extends JDialog {
             panelLocal.add(comboBox_1);
         }
         
-		@SuppressWarnings({ })
+		
 		private void crearPanelTipoPersona() {
             panelTipoPersona = new JPanel();
             panelTipoPersona.setLayout(null);
@@ -338,6 +336,8 @@ public class Busqueda extends JDialog {
         }
     }
 
+    
+    //BUSQUEDA POR LOCAL
     private void buscarPorLocal() {
         
         Clasificacion tipoLocal = (Clasificacion) ((JComboBox<?>)panelLocal.getComponent(1)).getSelectedItem();
@@ -355,6 +355,8 @@ public class Busqueda extends JDialog {
         }
     }
 
+    
+    //BUSQUEDA POR TIPO DE PERSONA
     private void buscarPorTipoPersona() {
         TipoPersonal tipo = (TipoPersonal) cbTipoPersona.getSelectedItem();
         
@@ -371,6 +373,8 @@ public class Busqueda extends JDialog {
         }
     }
 
+    
+    //BUSQUEDA POR NOMBRE DE LA PERSONA
     private void buscarPorNombre() {
         String nombre = txtNombre.getText().toLowerCase();
         
@@ -388,6 +392,7 @@ public class Busqueda extends JDialog {
         }
     }
 
+    
     private void agregarFilaTabla(Registro registro, Local local) {
         tableModel.addRow(new Object[]{
             registro.getPersona().getNumID(),

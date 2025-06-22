@@ -45,7 +45,6 @@ import javax.swing.SpinnerNumberModel;
 
 
 
-
 public class AnadirPersona extends JDialog {
 	
 	/**
@@ -121,6 +120,7 @@ public class AnadirPersona extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
+        setResizable(false);
         
         crearPanelInformacionPersonal();
         crearPanelTipoPersona();
@@ -481,59 +481,70 @@ public class AnadirPersona extends JDialog {
     
     private void guardarRegistro() {
         try {
+            boolean valido = true;
+
             // Validaciones
-            if (txtNombre.getText().trim().isEmpty() || 
-                txtApellidos.getText().trim().isEmpty() || 
+            if (txtNombre.getText().trim().isEmpty() ||
+                txtApellidos.getText().trim().isEmpty() ||
                 txtIdentidad.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nombre, apellidos e identidad son obligatorios", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }else if(!validarNombreApellido(txtNombre) || !validarNombreApellido(txtApellidos)){
-            	JOptionPane.showMessageDialog(this,
+
+                JOptionPane.showMessageDialog(this, "Nombre, apellidos e identidad son obligatorios",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                valido = false;
+
+            } else if (!validarNombreApellido(txtNombre) || !validarNombreApellido(txtApellidos)) {
+
+                JOptionPane.showMessageDialog(this,
                         "Nombre inválido",
                         "Error", JOptionPane.ERROR_MESSAGE);
-                    return ;
-                    
-            } else if (!txtIdentidad.getText().matches("^\\d{11}$")){
-            	JOptionPane.showMessageDialog(this,
+                valido = false;
+
+            } else if (!txtIdentidad.getText().matches("^\\d{11}$")) {
+
+                JOptionPane.showMessageDialog(this,
                         "Carnet inválido: debe contener 11 dígitos numéricos",
                         "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-            	
-            }else if (comboBoxTipo.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(this, "Seleccione un tipo de persona", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                valido = false;
+
+            } else if (comboBoxTipo.getSelectedItem() == null) {
+
+                JOptionPane.showMessageDialog(this, "Seleccione un tipo de persona",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                valido = false;
             }
-            
-            // Obtener datos
-            String nombre = txtNombre.getText();
-            String apellido = txtApellidos.getText();
-            String numID = txtIdentidad.getText();
-            TipoPersonal tipo = (TipoPersonal) comboBoxTipo.getSelectedItem();
-            
-            // Crear persona
-            Persona persona = crearPersonaSegunTipo(nombre, apellido, numID, tipo);
-            
-            // AÑADIDO: Guardar persona en la facultad
-            if (facultad != null) {
-                facultad.agregarPersona(persona);
-            } else {
-                JOptionPane.showMessageDialog(this, "Error: Facultad no inicializada", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+
+            if (valido) {
+                // Obtener datos
+                String nombre = txtNombre.getText().trim();
+                String apellido = txtApellidos.getText().trim();
+                String numID = txtIdentidad.getText().trim();
+                TipoPersonal tipo = (TipoPersonal) comboBoxTipo.getSelectedItem();
+
+                // Crear persona
+                Persona persona = crearPersonaSegunTipo(nombre, apellido, numID, tipo);
+
+                // Guardar persona
+                if (facultad != null) {
+                    facultad.agregarPersona(persona);
+                    JOptionPane.showMessageDialog(this, "Persona registrada exitosamente\nID: " + numID);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error: Facultad no inicializada",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-            
-            JOptionPane.showMessageDialog(this, "Persona registrada exitosamente\nID: " + numID);
-            dispose();
-            
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage(), 
-                "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
 
+
+    
+    
+    //CREADOR DE PERSONAS
     private Persona crearPersonaSegunTipo(String nombre, String apellido, String numID, TipoPersonal tipo) {
         switch(tipo) {
             case Estudiante:

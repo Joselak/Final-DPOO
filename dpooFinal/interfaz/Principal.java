@@ -355,13 +355,13 @@ public class Principal extends JFrame {
                     JOptionPane.showMessageDialog(Principal.this, 
                         "No se encontró personal con ese carnet", 
                         "Error", JOptionPane.WARNING_MESSAGE);
-                }
+                }/*
                 if (!textField_2.getText().matches("^\\d{11}$")) {
                     JOptionPane.showMessageDialog(this,
                         "Carnet inválido: debe contener 11 dígitos numéricos",
                         "Error", JOptionPane.ERROR_MESSAGE);
                     return;
-                }
+                }*/
             }
         }
         
@@ -380,9 +380,7 @@ public class Principal extends JFrame {
         
         // Configurar cómo se muestran las clasificaciones
         comboBox_2.setRenderer(new DefaultListCellRenderer() {
-            /**
-			 * 
-			 */
+          
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -403,6 +401,7 @@ public class Principal extends JFrame {
             }
         });
     }
+    
     //CALCULAR UNA HORA DE SALIDA APROXIMADA
     private LocalDateTime calcularHoraSalida(Persona persona) {
         LocalDateTime ahora = LocalDateTime.now();
@@ -428,101 +427,98 @@ public class Principal extends JFrame {
     private void registrarAcceso() {
         String carnet = textField_2.getText().trim();
         Clasificacion clasificacionSeleccionada = (Clasificacion) comboBox_2.getSelectedItem();
-           
         
-     // GENERAR NOMBRE PARA el local
         String nombreLocal = generarNombreLocal(clasificacionSeleccionada);
         Local nuevoLocal = new Local(nombreLocal, clasificacionSeleccionada);
         facultad.agregarLocal(nuevoLocal);
-                
-            
+
+        boolean datosValidos = true;
+
         if (rdbtnPersonal.isSelected()) {
             if (carnet.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Ingrese el carnet del personal", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
+                datosValidos = false;
+            }else if (!textField_2.getText().matches("^\\d{11}$")) {
+                JOptionPane.showMessageDialog(this,
+                        "Carnet inválido: debe contener 11 dígitos numéricos",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                datosValidos = false;
+            } 
+
             Persona persona = facultad.buscarPersona(carnet);
-            if (persona == null || persona.getTipo() == TipoPersonal.Visitante) {
-                JOptionPane.showMessageDialog(this, "Personal no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+            if (datosValidos && (persona == null || persona.getTipo() == TipoPersonal.Visitante)) {
+                datosValidos = false;
             }
-            
-            if (!facultad.verificarAcceso(nuevoLocal, persona)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Acceso denegado: esta persona no puede entrar a este local", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+
+            if (datosValidos && !facultad.verificarAcceso(nuevoLocal, persona)) {
+                JOptionPane.showMessageDialog(this,
+                        "Acceso denegado: esta persona no puede entrar a este local",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                datosValidos = false;
             }
-            
-            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            LocalDateTime horaEntrada = LocalDateTime.now();
-            LocalDateTime horaSalida = calcularHoraSalida(persona);
-            
-            nuevoLocal.registrarAcceso(persona, horaEntrada, horaSalida);
-            
-            JOptionPane.showMessageDialog(this, 
-                "Acceso registrado para: " + persona.getNombreCompleto() + 
-                "\nHora de entrada: " + horaEntrada.format(formato) + 
-                "\nHora de salida estimada: " + horaSalida.format(formato), 
-                "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
-            
+
+            if (datosValidos) {
+                DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                LocalDateTime horaEntrada = LocalDateTime.now();
+                LocalDateTime horaSalida = calcularHoraSalida(persona);
+
+                nuevoLocal.registrarAcceso(persona, horaEntrada, horaSalida);
+
+                JOptionPane.showMessageDialog(this,
+                        "Acceso registrado para: " + persona.getNombreCompleto() +
+                                "\nHora de entrada: " + horaEntrada.format(formato) +
+                                "\nHora de salida estimada: " + horaSalida.format(formato),
+                        "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+            }
+
         } else if (rdbtnVisitante.isSelected()) {
             String nombre = textField.getText().trim();
             String apellido = textField_1.getText().trim();
-            
+
             if (carnet.isEmpty() || nombre.isEmpty() || apellido.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Complete todos los campos del visitante", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }else if(!textField_2.getText().matches("^\\d{11}$")){
-            	 JOptionPane.showMessageDialog(this,
-                         "Carnet inválido: debe contener 11 dígitos numéricos",
-                         "Error", JOptionPane.ERROR_MESSAGE);
-                     return;
-            }else{
-            	if (!validarNombreApellido(nombre) || !validarNombreApellido(apellido)) {
-                    JOptionPane.showMessageDialog(this,
+                datosValidos = false;
+            }else if (!textField_2.getText().matches("^\\d{11}$")) {
+                JOptionPane.showMessageDialog(this,
+                        "Carnet inválido: debe contener 11 dígitos numéricos",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                datosValidos = false;
+            } else if (!validarNombreApellido(nombre) || !validarNombreApellido(apellido)) {
+                JOptionPane.showMessageDialog(this,
                         "Nombre inválido",
                         "Error", JOptionPane.ERROR_MESSAGE);
-                    return ;
+                datosValidos = false;
+            }
+
+            if (datosValidos) {
+                Visitante visitante = new Visitante(nombre, apellido, carnet, TipoPersonal.Visitante, 
+                        "Visita", "Institución no especificada", "Contacto no especificado");
+                
+                if (!facultad.verificarAcceso(nuevoLocal, visitante)) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Acceso denegado: los visitantes solo pueden acceder en horario de 8:00 a 12:00", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+                
+                LocalDateTime horaEntrada = LocalDateTime.now();
+                LocalDateTime horaSalida = calcularHoraSalida(visitante);
+
+                nuevoLocal.registrarAcceso(visitante, horaEntrada, horaSalida);
+
+                DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+                JOptionPane.showMessageDialog(this,
+                        "Acceso registrado para el visitante: " + visitante.getNombreCompleto() +
+                                "\nHora de entrada: " + horaEntrada.format(formato) +
+                                "\nHora de salida estimada: " + horaSalida.format(formato),
+                        "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
             }
-            
-            
-            
-            Visitante visitante = new Visitante(
-                nombre, apellido, carnet, TipoPersonal.Visitante, 
-                "Visita", "Institución no especificada", "Contacto no especificado"
-            );
-            
-            if (!facultad.verificarAcceso(nuevoLocal, visitante)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Acceso denegado: los visitantes solo pueden acceder en horario de 8:00 a 12:00", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            LocalDateTime horaEntrada = LocalDateTime.now();
-            LocalDateTime horaSalida = calcularHoraSalida(visitante);
-            
-            facultad.agregarPersona(visitante);
-            nuevoLocal.registrarAcceso(visitante, horaEntrada, horaSalida);
-            
-            JOptionPane.showMessageDialog(this, 
-                "Acceso registrado para visitante: " + nombre + " " + apellido + 
-                "\nHora de entrada: " + horaEntrada.format(formato) + 
-                "\nHora de salida estimada: " + horaSalida.format(formato), 
-                "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                "Seleccione un tipo de persona", "Error", JOptionPane.WARNING_MESSAGE);
-            return;
         }
-        
         limpiarCampos();
     }
     
+
     //VALIDACION DEL NOMBRE Y EL APELLIDO
     private boolean validarNombreApellido(String texto) {
         // Verifica que el texto no esté vacío, solo contenga letras y tenga <= 50 caracteres
