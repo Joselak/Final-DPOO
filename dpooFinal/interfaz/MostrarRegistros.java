@@ -1,9 +1,17 @@
 package dpooFinal.interfaz;
 
 
+import dpooFinal.logica.Administrativo;
+import dpooFinal.logica.Directivo;
+import dpooFinal.logica.Especialista;
+import dpooFinal.logica.Estudiante;
 import dpooFinal.logica.Facultad;
 import dpooFinal.logica.Local;
+import dpooFinal.logica.Profesor;
 import dpooFinal.logica.Registro;
+import dpooFinal.logica.Persona;
+import dpooFinal.logica.Tecnico;
+import dpooFinal.logica.Visitante;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -21,10 +29,10 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MostrarRegistros extends JDialog {
     
@@ -36,19 +44,15 @@ public class MostrarRegistros extends JDialog {
     private final JPanel contentPanel = new JPanel();
 
     public static void main(String[] args) {
-    	
             try {
-            	Facultad facultad = Facultad.getInstancia();
+                Facultad facultad = Facultad.getInstancia();
                 MostrarRegistros dialog = new MostrarRegistros(facultad);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        
     }
-    
-    
 
     public MostrarRegistros(Facultad facultad) {
         setTitle("Tabla de registros");
@@ -65,12 +69,9 @@ public class MostrarRegistros extends JDialog {
         contentPanel.add(panelResultados);
         
         model = new DefaultTableModel() {
-            /**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 1L;
 
-			@Override
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -90,18 +91,18 @@ public class MostrarRegistros extends JDialog {
         // Ocultar columna de objetos Registro
         tableResultados.removeColumn(tableResultados.getColumnModel().getColumn(5));
         
+        // Agregar listener para doble click
+        tableResultados.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    mostrarDetallesRegistro();
+                }
+            }
+        });
+        
         JLabel lblRegistros = new JLabel("Registros:");
         lblRegistros.setBounds(30, 27, 69, 14);
         contentPanel.add(lblRegistros);
-        
-        JButton btnEliminar = new JButton("Eliminar");
-        btnEliminar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                eliminarRegistro();
-            }
-        });
-        btnEliminar.setBounds(471, 330, 89, 23);
-        contentPanel.add(btnEliminar);
         
         JButton btnModificar = new JButton("Modificar");
         btnModificar.addActionListener(new ActionListener() {
@@ -109,15 +110,14 @@ public class MostrarRegistros extends JDialog {
                  modificarRegistro();
             }
         });
-        btnModificar.setBounds(372, 330, 89, 23);
+        btnModificar.setBounds(471, 329, 89, 23);
         contentPanel.add(btnModificar);
         
-       
         JButton btnSalir = new JButton("Salir");
         btnSalir.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		dispose();
-        	}
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
         });
         btnSalir.setBounds(243, 413, 89, 23);
         contentPanel.add(btnSalir);
@@ -131,18 +131,14 @@ public class MostrarRegistros extends JDialog {
         mostrarRegistros();
     }
 
-    
     public void setFacultad(Facultad facultad) {
         this.facultad = facultad;
     }
     
-    
-    //MOSTRAR LOS EGISTROS REALIZADOS
     private void mostrarRegistros() {
         model.setRowCount(0); // Limpiar tabla antes de mostrar
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         
-        // Recorrer todos los locales y sus registros
         for (Local local : facultad.getLocales()) {
             for (Registro registro : local.getRegistros()) {
                 model.addRow(new Object[]{
@@ -157,37 +153,6 @@ public class MostrarRegistros extends JDialog {
         }
     }
 
-    //ELIMINAR UN REGISTRO
-    private void eliminarRegistro() {
-        int fila = tableResultados.getSelectedRow();
-        if (fila < 0) {
-            JOptionPane.showMessageDialog(this, "Seleccione un registro", "Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        Registro registro = (Registro) model.getValueAt(fila, 5);
-        int confirmacion = JOptionPane.showConfirmDialog(
-            this, 
-            "¿Eliminar registro de " + registro.getPersona().getNombreCompleto() + "?", 
-            "Confirmar", 
-            JOptionPane.YES_NO_OPTION
-        );
-        
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            // Buscar y eliminar el registro de su local correspondiente
-            for (Local local : facultad.getLocales()) {
-                if (local.getRegistros().remove(registro)) {
-                    model.removeRow(fila);
-                    JOptionPane.showMessageDialog(this, "Registro eliminado");
-                    return;
-                }
-            }
-            JOptionPane.showMessageDialog(this, "No se pudo eliminar el registro", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    
-    //MODIFICAR UN REGISTRO
     private void modificarRegistro() {
         int fila = tableResultados.getSelectedRow();
         if (fila < 0) {
@@ -226,6 +191,117 @@ public class MostrarRegistros extends JDialog {
             }
         }
     }
+    
+    
+    //MOSTRAR DETALLES DE UN REGISTRO
+    private void mostrarDetallesRegistro() {
+        int fila = tableResultados.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un registro", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        Registro registro = (Registro) model.getValueAt(fila, 5);
+       Persona persona = registro.getPersona();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        
+        Local localRegistro = null;
+        boolean encontrado = false;
+        for (int i = 0; i < facultad.getLocales().size() && !encontrado; i++) {
+            Local local = facultad.getLocales().get(i);
+            if (local.getRegistros().contains(registro)) {
+                localRegistro = local;
+                encontrado = true;
+            }
+        }
+        
+        // Crear panel para mostrar los detalles
+        JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+        
+        // Datos del registro
+        panel.add(new JLabel("Datos del Registro:"));
+        panel.add(new JLabel(""));
+        if (localRegistro != null) {
+            panel.add(new JLabel("Local:"));
+            panel.add(new JLabel(localRegistro.getId()));
+        }
+        panel.add(new JLabel("Hora de entrada:"));
+        panel.add(new JLabel(registro.getHoraEntrada().format(formatter)));
+        panel.add(new JLabel("Hora de salida:"));
+        panel.add(new JLabel(registro.getHoraSalida() != null ? registro.getHoraSalida().format(formatter) : "Pendiente"));
+        
+        
+        panel.add(new JLabel(""));
+        panel.add(new JLabel(""));
+        panel.add(new JLabel("Datos de la Persona:"));
+        panel.add(new JLabel(""));
+        panel.add(new JLabel("Carnet:"));
+        panel.add(new JLabel(persona.getNumID()));
+        panel.add(new JLabel("Nombre completo:"));
+        panel.add(new JLabel(persona.getNombreCompleto()));
+        panel.add(new JLabel("Tipo de persona:"));
+        panel.add(new JLabel(persona.getClass().getSimpleName()));
+        
+        // Atributos específicos según el tipo de persona
+        if (persona instanceof Estudiante) {
+            Estudiante estudiante = (Estudiante) persona;
+            panel.add(new JLabel("Año:"));
+            panel.add(new JLabel(String.valueOf(estudiante.getAnio())));
+            panel.add(new JLabel("Grupo:"));
+            panel.add(new JLabel(String.valueOf(estudiante.getGrupo())));
+        } 
+        else if (persona instanceof Profesor) {
+            Profesor profesor = (Profesor) persona;
+            panel.add(new JLabel("Departamento:"));
+            panel.add(new JLabel(profesor.getDepartamento()));
+            panel.add(new JLabel("Categoría Docente:"));
+            panel.add(new JLabel(profesor.getCategDocente()));
+            panel.add(new JLabel("Categoría Científica:"));
+            panel.add(new JLabel(profesor.getCategCientifica()));
+            panel.add(new JLabel("Tipo de Contrato:"));
+            panel.add(new JLabel(profesor.getTipoContrato()));
+            
+            if (persona instanceof Directivo) {
+                Directivo directivo = (Directivo) persona;
+                panel.add(new JLabel("Área:"));
+                panel.add(new JLabel(directivo.getArea()));
+                panel.add(new JLabel("Cargo:"));
+                panel.add(new JLabel(directivo.getCargo()));
+            }
+        } 
+        else if (persona instanceof Administrativo) {
+            Administrativo admin = (Administrativo) persona;
+            panel.add(new JLabel("Plaza:"));
+            panel.add(new JLabel(admin.getPlaza()));
+        }
+        else if (persona instanceof Tecnico) {
+            Tecnico tecnico = (Tecnico) persona;
+            panel.add(new JLabel("Plaza:"));
+            panel.add(new JLabel(tecnico.getPlaza()));
+        }
+        else if (persona instanceof Especialista) {
+            Especialista especialista = (Especialista) persona;
+            panel.add(new JLabel("Proyecto:"));
+            panel.add(new JLabel(especialista.getProyecto()));
+        }
+        else if (persona instanceof Visitante) {
+            Visitante visitante = (Visitante) persona;
+            panel.add(new JLabel("Motivo de visita:"));
+            panel.add(new JLabel(visitante.getMotivoVisita()));
+            panel.add(new JLabel("Área de la universidad:"));
+            panel.add(new JLabel(visitante.getAreaUniversidad()));
+            panel.add(new JLabel("Autorizado por:"));
+            panel.add(new JLabel(visitante.getAutorizadoPor()));
+        }
+        
+        
+        
+        // Mostrar el diálogo con los detalles
+        JOptionPane.showMessageDialog(
+            this, 
+            panel, 
+            "Detalles del Registro", 
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
 }
-
-

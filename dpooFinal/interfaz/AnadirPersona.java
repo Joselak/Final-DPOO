@@ -39,11 +39,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import javax.swing.DefaultComboBoxModel;
+
+
+
+
 import java.awt.CardLayout;
+
+
+
+
 import javax.swing.SpinnerNumberModel;
-
-
-
 
 public class AnadirPersona extends JDialog {
 	
@@ -96,6 +101,8 @@ public class AnadirPersona extends JDialog {
     private JTextField textAOrigen;
     private JTextField textAPor;
     
+    
+    private JTextField txtPlaza2;
     public static void main(String[] args) {
         try {
             AnadirPersona dialog = new AnadirPersona();
@@ -107,6 +114,7 @@ public class AnadirPersona extends JDialog {
     }
 
     private Facultad facultad;
+	
     
 
 	public void setFacultad(Facultad facultad) {
@@ -367,9 +375,9 @@ public class AnadirPersona extends JDialog {
         lblPlaza2.setBounds(10, 13, 99, 14);
         panelTecnico.add(lblPlaza2);
         
-        txtPlaza = new JTextField();
-        txtPlaza.setBounds(108, 10, 120, 20);
-        panelTecnico.add(txtPlaza);
+        txtPlaza2 = new JTextField();
+        txtPlaza2.setBounds(108, 10, 120, 20);
+        panelTecnico.add(txtPlaza2);
         
         
         
@@ -564,7 +572,7 @@ public class AnadirPersona extends JDialog {
                     
             case Tecnico:
                 return new Tecnico(nombre, apellido, numID, tipo, 
-                    txtPlaza.getText());
+                    txtPlaza2.getText());
                     
             case Especialista:
                 return new Especialista(nombre, apellido, numID, tipo, 
