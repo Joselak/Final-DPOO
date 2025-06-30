@@ -1,46 +1,41 @@
 package dpooFinal.interfaz;
 
-import dpooFinal.inicializador.Inicializador;
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
-import dpooFinal.logica.Clasificacion;
-import dpooFinal.logica.Persona;
-import dpooFinal.logica.TipoPersonal;
-import dpooFinal.logica.Visitante;
-
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-
-import java.awt.event.ActionListener;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
-
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.swing.border.TitledBorder;
-import javax.swing.UIManager;
-
-import java.awt.Color;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JButton;
-import javax.swing.border.LineBorder;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
-import java.awt.CardLayout;
-import java.awt.Component;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+
+import dpooFinal.inicializador.Inicializador;
+import dpooFinal.logica.Clasificacion;
+import dpooFinal.logica.Facultad;
+import dpooFinal.logica.Local;
+import dpooFinal.logica.Persona;
+import dpooFinal.logica.TipoPersonal;
+import dpooFinal.logica.Visitante;
 
 public class Principal extends JFrame {
     

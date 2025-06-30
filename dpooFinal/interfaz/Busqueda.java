@@ -1,13 +1,40 @@
 package dpooFinal.interfaz;
 
 
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import dpooFinal.logica.Administrativo;
 import dpooFinal.logica.Clasificacion;
 import dpooFinal.logica.Directivo;
 import dpooFinal.logica.Especialista;
 import dpooFinal.logica.Estudiante;
+import dpooFinal.logica.Facultad;
+import dpooFinal.logica.Local;
 import dpooFinal.logica.Persona;
 import dpooFinal.logica.Profesor;
 import dpooFinal.logica.Registro;
@@ -15,34 +42,6 @@ import dpooFinal.logica.Tecnico;
 import dpooFinal.logica.TipoPersonal;
 import dpooFinal.logica.Visitante;
 import javafx.scene.input.MouseEvent;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Calendar;
 
 
 

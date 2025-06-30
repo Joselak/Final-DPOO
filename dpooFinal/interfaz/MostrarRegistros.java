@@ -1,20 +1,12 @@
 package dpooFinal.interfaz;
 
 
-import dpooFinal.logica.Administrativo;
-import dpooFinal.logica.Directivo;
-import dpooFinal.logica.Especialista;
-import dpooFinal.logica.Estudiante;
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
-import dpooFinal.logica.Profesor;
-import dpooFinal.logica.Registro;
-import dpooFinal.logica.Persona;
-import dpooFinal.logica.Tecnico;
-import dpooFinal.logica.Visitante;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,10 +21,17 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import dpooFinal.logica.Administrativo;
+import dpooFinal.logica.Directivo;
+import dpooFinal.logica.Especialista;
+import dpooFinal.logica.Estudiante;
+import dpooFinal.logica.Facultad;
+import dpooFinal.logica.Local;
+import dpooFinal.logica.Persona;
+import dpooFinal.logica.Profesor;
+import dpooFinal.logica.Registro;
+import dpooFinal.logica.Tecnico;
+import dpooFinal.logica.Visitante;
 
 public class MostrarRegistros extends JDialog {
     

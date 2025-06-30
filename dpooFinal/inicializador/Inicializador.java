@@ -1,10 +1,9 @@
 package dpooFinal.inicializador;
 
-import dpooFinal.interfaz.Principal;
-
 import java.awt.EventQueue;
 import java.time.LocalDateTime;
 
+import dpooFinal.interfaz.Principal;
 import dpooFinal.logica.Administrativo;
 import dpooFinal.logica.Clasificacion;
 import dpooFinal.logica.Directivo;
