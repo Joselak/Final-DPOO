@@ -3,16 +3,26 @@ package dpooFinal.interfaz;
 
 import dpooFinal.logica.Facultad;
 import dpooFinal.logica.Local;
+import dpooFinal.logica.Administrativo;
 import dpooFinal.logica.Clasificacion;
+import dpooFinal.logica.Directivo;
+import dpooFinal.logica.Especialista;
+import dpooFinal.logica.Estudiante;
 import dpooFinal.logica.Persona;
+import dpooFinal.logica.Profesor;
 import dpooFinal.logica.Registro;
+import dpooFinal.logica.Tecnico;
 import dpooFinal.logica.TipoPersonal;
+import dpooFinal.logica.Visitante;
+import javafx.scene.input.MouseEvent;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.CardLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -30,6 +40,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Calendar;
 
@@ -144,13 +155,42 @@ public class Busqueda extends JDialog {
         
         
         
-        tableResultados = new JTable(tableModel);
+        tableResultados = new JTable(tableModel) {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Esto hace que todas las celdas sean no editables
+            }
+        };
         scrollPane = new JScrollPane(tableResultados);
         panelResultados.add(scrollPane, BorderLayout.CENTER);
         
         tableModel.fireTableDataChanged();
         tableResultados.revalidate();
         tableResultados.repaint();
+        
+        
+        tableResultados.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    // Cancela cualquier edición en curso
+                    if (tableResultados.isEditing()) {
+                        tableResultados.getCellEditor().stopCellEditing();
+                    }
+                    
+                    // Asegura que hay una fila seleccionada
+                    int row = tableResultados.rowAtPoint(e.getPoint());
+                    if (row >= 0) {
+                        tableResultados.setRowSelectionInterval(row, row);
+                        mostrarDetallesRegistro();
+                    }
+                }
+            }
+        });
         
         // PANEL DE BOTONES
         JPanel buttonPane = new JPanel();
@@ -192,7 +232,7 @@ public class Busqueda extends JDialog {
             spinnerFecha = new JSpinner(new SpinnerDateModel());
             JSpinner.DateEditor fechaEditor = new JSpinner.DateEditor(spinnerFecha, "dd/MM/yyyy");
             spinnerFecha.setEditor(fechaEditor);
-            spinnerFecha.setBounds(100, 10, 80, 20);
+            spinnerFecha.setBounds(106, 10, 98, 20);
             panelFechaYHora.add(spinnerFecha);
             
             JLabel lblHora = new JLabel("Hora de entrada:");
@@ -214,7 +254,7 @@ public class Busqueda extends JDialog {
             spinnerHora = new JSpinner(new SpinnerDateModel());
             JSpinner.DateEditor horaSalida = new JSpinner.DateEditor(spinnerHora, "HH:mm");
             spinnerHora.setEditor(horaSalida);
-            spinnerHora.setBounds(108, 40, 72, 20);
+            spinnerHora.setBounds(106, 41, 72, 20);
             panelFechaYHora.add(spinnerHora);
             
             cardPanel.add(panelFechaYHora, "fechaHora");
@@ -236,7 +276,7 @@ public class Busqueda extends JDialog {
             panelLocal.add(comboBox_1);
         }
         
-		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		private void crearPanelTipoPersona() {
             panelTipoPersona = new JPanel();
             panelTipoPersona.setLayout(null);
@@ -394,6 +434,8 @@ public class Busqueda extends JDialog {
 
     
     private void agregarFilaTabla(Registro registro, Local local) {
+    	//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    	
         tableModel.addRow(new Object[]{
             registro.getPersona().getNumID(),
             registro.getPersona().getNombre() + " " + registro.getPersona().getApellido(),
@@ -401,6 +443,125 @@ public class Busqueda extends JDialog {
             local.getId(),
             registro.getHoraEntrada()
         });
+    }
+    
+    
+  //MOSTRAR DETALLES DE UN REGISTRO
+    private void mostrarDetallesRegistro() {
+        int fila = tableResultados.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un registro", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Obtener los datos de la fila seleccionada
+        String idPersona = (String) tableModel.getValueAt(fila, 0);
+        String localId = (String) tableModel.getValueAt(fila, 3);
+        LocalDateTime horaEntrada = (LocalDateTime) tableModel.getValueAt(fila, 4);
+        
+        // Buscar el registro exacto
+        Registro registroEncontrado = null;
+        Local localEncontrado = null;
+        
+        boolean encontrado = false;
+        for (Local local : facultad.getLocales()) {
+            if (!encontrado && local.getId().equals(localId)) {
+                for (Registro registro : local.getRegistros()) {
+                    if (!encontrado && 
+                        registro.getPersona().getNumID().equals(idPersona) && 
+                        registro.getHoraEntrada().equals(horaEntrada)) {
+                        registroEncontrado = registro;
+                        localEncontrado = local;
+                        encontrado = true;
+                    }
+                }
+            }
+        }
+        
+        if (registroEncontrado == null) {
+            JOptionPane.showMessageDialog(this, "No se encontraron detalles del registro", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Persona persona = registroEncontrado.getPersona();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        
+        // Crear y mostrar el diálogo con los detalles
+        JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+        
+        // Datos de la persona
+        panel.add(new JLabel("Nombre:"));
+        panel.add(new JLabel(persona.getNombre() + " " + persona.getApellido()));
+        panel.add(new JLabel("Tipo:"));
+        panel.add(new JLabel(persona.getTipo().toString()));
+        panel.add(new JLabel("ID:"));
+        panel.add(new JLabel(persona.getNumID()));
+        
+        // Datos del registro
+        panel.add(new JLabel("Local:"));
+        panel.add(new JLabel(localEncontrado.getId() + " (" + localEncontrado.getTipoLocal() + ")"));
+        panel.add(new JLabel("Hora de entrada:"));
+        panel.add(new JLabel(registroEncontrado.getHoraEntrada().format(formatter)));
+        panel.add(new JLabel("Hora de salida:"));
+        panel.add(new JLabel(registroEncontrado.getHoraSalida() != null ? 
+            registroEncontrado.getHoraSalida().format(formatter) : "Pendiente"));
+        
+     // Atributos específicos según el tipo de persona
+        if (persona instanceof Estudiante) {
+            Estudiante estudiante = (Estudiante) persona;
+            panel.add(new JLabel("Año:"));
+            panel.add(new JLabel(String.valueOf(estudiante.getAnio())));
+            panel.add(new JLabel("Grupo:"));
+            panel.add(new JLabel(String.valueOf(estudiante.getGrupo())));
+        } 
+        else if (persona instanceof Profesor) {
+            Profesor profesor = (Profesor) persona;
+            panel.add(new JLabel("Departamento:"));
+            panel.add(new JLabel(profesor.getDepartamento()));
+            panel.add(new JLabel("Categoría Docente:"));
+            panel.add(new JLabel(profesor.getCategDocente()));
+            panel.add(new JLabel("Categoría Científica:"));
+            panel.add(new JLabel(profesor.getCategCientifica()));
+            panel.add(new JLabel("Tipo de Contrato:"));
+            panel.add(new JLabel(profesor.getTipoContrato()));
+            
+            if (persona instanceof Directivo) {
+                Directivo directivo = (Directivo) persona;
+                panel.add(new JLabel("Área:"));
+                panel.add(new JLabel(directivo.getArea()));
+                panel.add(new JLabel("Cargo:"));
+                panel.add(new JLabel(directivo.getCargo()));
+            }
+        } 
+        else if (persona instanceof Administrativo) {
+            Administrativo admin = (Administrativo) persona;
+            panel.add(new JLabel("Plaza:"));
+            panel.add(new JLabel(admin.getPlaza()));
+        }
+        else if (persona instanceof Tecnico) {
+            Tecnico tecnico = (Tecnico) persona;
+            panel.add(new JLabel("Plaza:"));
+            panel.add(new JLabel(tecnico.getPlaza()));
+        }
+        else if (persona instanceof Especialista) {
+            Especialista especialista = (Especialista) persona;
+            panel.add(new JLabel("Proyecto:"));
+            panel.add(new JLabel(especialista.getProyecto()));
+        }
+        else if (persona instanceof Visitante) {
+            Visitante visitante = (Visitante) persona;
+            panel.add(new JLabel("Motivo de visita:"));
+            panel.add(new JLabel(visitante.getMotivoVisita()));
+            panel.add(new JLabel("Área de la universidad:"));
+            panel.add(new JLabel(visitante.getAreaUniversidad()));
+            panel.add(new JLabel("Autorizado por:"));
+            panel.add(new JLabel(visitante.getAutorizadoPor()));
+        }
+        
+        // Mostrar el diálogo
+        JOptionPane.showMessageDialog(this, panel, "Detalles del Registro", 
+            JOptionPane.INFORMATION_MESSAGE);
     }
 }
 

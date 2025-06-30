@@ -56,7 +56,7 @@ public class MostrarRegistros extends JDialog {
 
     public MostrarRegistros(Facultad facultad) {
         setTitle("Tabla de registros");
-        setBounds(100, 100, 595, 500);
+        setBounds(100, 100, 650, 500);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
