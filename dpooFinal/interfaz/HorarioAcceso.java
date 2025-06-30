@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.WindowListener;
 
 public class HorarioAcceso extends JDialog {
 
@@ -109,6 +110,15 @@ public class HorarioAcceso extends JDialog {
 	               "   - El acceso específico depende del tipo de visitante y se ajusta\n" +
 	               "     a las condiciones de acceso según su categoría similar.";
 	    }
+	 
+	//este método para permitir el control desde Principal
+	 public void setDefaultCloseOperation(int operation) {
+	     super.setDefaultCloseOperation(operation);
+	 }
+
+	 //este WindowListener para limpiar la referencia al cerrar
+	 public void addWindowListener(WindowListener listener) {
+	     super.addWindowListener(listener);
+	 }
 
 }
-

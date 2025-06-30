@@ -32,7 +32,7 @@ import dpooFinal.logica.Profesor;
 import dpooFinal.logica.Registro;
 import dpooFinal.logica.Tecnico;
 import dpooFinal.logica.Visitante;
-
+import java.awt.event.WindowListener;
 public class MostrarRegistros extends JDialog {
     
     private static final long serialVersionUID = 1L;
@@ -55,7 +55,7 @@ public class MostrarRegistros extends JDialog {
 
     public MostrarRegistros(Facultad facultad) {
         setTitle("Tabla de registros");
-        setBounds(100, 100, 650, 500);
+        setBounds(100, 100, 598, 500);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -244,6 +244,8 @@ public class MostrarRegistros extends JDialog {
         // Atributos específicos según el tipo de persona
         if (persona instanceof Estudiante) {
             Estudiante estudiante = (Estudiante) persona;
+            System.out.println("Datos estudiante - Grupo: " + estudiante.getGrupo() + 
+                    ", Año: " + estudiante.getAnio());
             panel.add(new JLabel("Año:"));
             panel.add(new JLabel(String.valueOf(estudiante.getAnio())));
             panel.add(new JLabel("Grupo:"));
@@ -302,5 +304,16 @@ public class MostrarRegistros extends JDialog {
             "Detalles del Registro", 
             JOptionPane.INFORMATION_MESSAGE
         );
+    }
+    
+    
+ // método para permitir el control desde Principal
+    public void setDefaultCloseOperation(int operation) {
+        super.setDefaultCloseOperation(operation);
+    }
+
+    // WindowListener para limpiar la referencia al cerrar
+    public void addWindowListener(WindowListener listener) {
+        super.addWindowListener(listener);
     }
 }

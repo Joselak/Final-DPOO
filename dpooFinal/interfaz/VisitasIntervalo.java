@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -28,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.WindowListener;
 
 import dpooFinal.logica.Administrativo;
 import dpooFinal.logica.Directivo;
@@ -40,7 +42,7 @@ import dpooFinal.logica.Profesor;
 import dpooFinal.logica.Registro;
 import dpooFinal.logica.Tecnico;
 import dpooFinal.logica.Visitante;
-import javafx.scene.input.MouseEvent;
+
 
 public class VisitasIntervalo extends JDialog {
 	
@@ -385,6 +387,14 @@ public class VisitasIntervalo extends JDialog {
 	    // Mostrar el diálogo
 	    JOptionPane.showMessageDialog(this, panel, "Detalles de " + nombre + " " + apellido, 
 	        JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void setDefaultCloseOperation(int operation) {
+	    super.setDefaultCloseOperation(operation);
+	}
+
+	public void addWindowListener(WindowListener listener) {
+	    super.addWindowListener(listener);
 	}
 	
 }

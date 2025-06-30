@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.awt.event.WindowListener;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -41,7 +42,7 @@ import dpooFinal.logica.Registro;
 import dpooFinal.logica.Tecnico;
 import dpooFinal.logica.TipoPersonal;
 import dpooFinal.logica.Visitante;
-import javafx.scene.input.MouseEvent;
+import java.awt.event.MouseEvent;
 
 
 
@@ -561,6 +562,15 @@ public class Busqueda extends JDialog {
         // Mostrar el diálogo
         JOptionPane.showMessageDialog(this, panel, "Detalles del Registro", 
             JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    
+    public void setDefaultCloseOperation(int operation) {
+        super.setDefaultCloseOperation(operation);
+    }
+
+    public void addWindowListener(WindowListener listener) {
+        super.addWindowListener(listener);
     }
 }
 

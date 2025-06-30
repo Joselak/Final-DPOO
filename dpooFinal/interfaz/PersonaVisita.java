@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+import java.awt.event.WindowListener;
 public class PersonaVisita extends JDialog {
     /**
 	 * 
@@ -113,19 +113,16 @@ public class PersonaVisita extends JDialog {
     }
 
     private void buscarLocalesVisitados() {
-    	boolean encontrado=true;
-    	
+        boolean encontrado = true;
+        
         String carnet = textFieldCarnet.getText().trim();
         
         if (carnet.isEmpty()) {
-            textAreaResultados.setText("Por favor ingrese un número de carnet");
-            encontrado=false;
-        }
-        
-        // Verificar si la persona existe
-        if (facultad.buscarPersona(carnet) == null) {
-            textAreaResultados.setText("No se encontró una persona con el carnet: " + carnet);
-            encontrado=false;
+            JOptionPane.showMessageDialog(this, "Por favor ingrese un numero de carnet", "Error", JOptionPane.ERROR_MESSAGE);
+            encontrado = false;
+        } else if (!carnet.matches("^\\d{11}$")) {
+            JOptionPane.showMessageDialog(this, "Carnet inválido: debe contener 11 dígitos", "Error", JOptionPane.ERROR_MESSAGE);
+            encontrado = false;
         }
         
         Date fechaInicio = (Date) spinnerInicio.getValue();
@@ -133,22 +130,18 @@ public class PersonaVisita extends JDialog {
         
         if (fechaInicio.after(fechaFin)) {
             textAreaResultados.setText("La fecha de inicio debe ser anterior a la fecha fin");
-            encontrado=false;
+            encontrado = false;
         }
         
         if (!encontrado) {
             return;
         }
 
-        
         // Convertir a LocalDateTime (ajustando horas para cubrir todo el día)
         LocalDateTime inicioDateTime = fechaInicio.toInstant().atZone(ZoneId.systemDefault())
                                     .toLocalDate().atStartOfDay();
         LocalDateTime finDateTime = fechaFin.toInstant().atZone(ZoneId.systemDefault())
                                   .toLocalDate().atTime(23, 59, 59);
-        
-        // Depuración: Mostrar fechas que se están usando
-        System.out.println("Buscando entre: " + inicioDateTime + " y " + finDateTime);
         
         // Obtener todos los registros de la persona en el rango de fechas
         ArrayList<Object[]> registrosConLocales = new ArrayList<>();
@@ -163,13 +156,11 @@ public class PersonaVisita extends JDialog {
             for (Registro acceso : accesos) {
                 if (acceso.getPersona().getNumID().equals(carnet)) {
                     registrosConLocales.add(new Object[]{acceso, local});
-                    System.out.println("Registro encontrado: " + acceso.getHoraEntrada() + 
-                                     " - " + local.getId());
                 }
             }
         }
         
-        // Depuración: Mostrar estadísticas
+        //Depuración: Mostrar estadísticas
         System.out.println("Total locales revisados: " + totalLocales);
         System.out.println("Total registros encontrados: " + totalRegistros);
         System.out.println("Registros coincidentes: " + registrosConLocales.size());
@@ -183,8 +174,11 @@ public class PersonaVisita extends JDialog {
             StringBuilder sb = new StringBuilder();
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             
-            // Encabezados de la tabla
-            sb.append("VISITAS HECHAS POR: ").append(facultad.buscarPersona(carnet).getNombre())
+            // Obtener el nombre de la persona si está registrada, o usar "Visitante" si no lo está
+            String nombrePersona = facultad.buscarPersona(carnet) != null ? 
+                                facultad.buscarPersona(carnet).getNombre() : "Visitante";
+            
+            sb.append("VISITAS HECHAS POR: ").append(nombrePersona)
               .append(" (").append(carnet).append(")\n");
             sb.append("PERÍODO DE TIEMPO: ").append(inicioDateTime.toLocalDate())
               .append(" a ").append(finDateTime.toLocalDate()).append("\n\n");
@@ -210,5 +204,13 @@ public class PersonaVisita extends JDialog {
         }
     }
 
+    public void setDefaultCloseOperation(int operation) {
+        super.setDefaultCloseOperation(operation);
+    }
+
+    public void addWindowListener(WindowListener listener) {
+        super.addWindowListener(listener);
+    }
+    
     
 }

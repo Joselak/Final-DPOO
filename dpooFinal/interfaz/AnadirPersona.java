@@ -11,7 +11,7 @@ import dpooFinal.logica.Especialista;
 import dpooFinal.logica.Estudiante;
 import dpooFinal.logica.Profesor;
 import dpooFinal.logica.Tecnico;
-import dpooFinal.logica.Visitante;
+
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -28,25 +28,17 @@ import javax.swing.UIManager;
 import javax.swing.JComboBox;
 
 import java.awt.Color;
-
-
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-
 import javax.swing.JSpinner;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 import javax.swing.DefaultComboBoxModel;
-
-
-
-
 import java.awt.CardLayout;
-
-
-
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.SpinnerNumberModel;
 
@@ -66,7 +58,6 @@ public class AnadirPersona extends JDialog {
     private JPanel panelEstudiante;
     private JPanel panelProfesor;
     private JPanel panelAdministrativo;
-    private JPanel panelVisitante;
     private JPanel panelTecnico;
     private JPanel panelDirectivo;
     private JPanel panelEspecialista;
@@ -84,6 +75,7 @@ public class AnadirPersona extends JDialog {
     
  // Componentes para Estudiante
     private JTextField textGrupo;
+    private JSpinner spinnerAnio;
  // Componentes para especialista
     private JTextField textProyecto;
     
@@ -96,10 +88,7 @@ public class AnadirPersona extends JDialog {
     private JTextField textCCientificaD;
     private JTextField textTContratoD;
     
- // Componentes para Visitante
-    private JTextField textMVisita;
-    private JTextField textAOrigen;
-    private JTextField textAPor;
+ 
     
     
     private JTextField txtPlaza2;
@@ -174,7 +163,7 @@ public class AnadirPersona extends JDialog {
     }
 
     private void crearPanelTipoPersona() {
-        JPanel panel_1 = new JPanel();
+    	JPanel panel_1 = new JPanel();
         panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), 
             "Informacion de la Persona", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panel_1.setBounds(280, 11, 269, 206);
@@ -186,7 +175,12 @@ public class AnadirPersona extends JDialog {
         panel_1.add(lblTipo);
         
         comboBoxTipo = new JComboBox<>();
-        comboBoxTipo.setModel(new DefaultComboBoxModel<TipoPersonal>(TipoPersonal.values()));
+        
+        // FILTRAR TIPOS - EXCLUIR VISITANTE
+        List<TipoPersonal> tiposFiltrados = new ArrayList<>(Arrays.asList(TipoPersonal.values()));
+        tiposFiltrados.remove(TipoPersonal.Visitante);
+        comboBoxTipo.setModel(new DefaultComboBoxModel<>(tiposFiltrados.toArray(new TipoPersonal[0])));
+        
         comboBoxTipo.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -216,7 +210,6 @@ public class AnadirPersona extends JDialog {
         panelContenedor.add(panelProfesor, "Profesor");
         panelContenedor.add(panelEspecialista, "Especialista");
         panelContenedor.add(panelTecnico, "Tecnico");
-        panelContenedor.add(panelVisitante, "Visitante");
         panelContenedor.add(panelDirectivo, "Directivo");
         
         JLabel lblCargo = new JLabel("Cargo:");
@@ -261,10 +254,10 @@ public class AnadirPersona extends JDialog {
         lblAo.setBounds(121, 13, 38, 14);
         panelEstudiante.add(lblAo);
         
-        JSpinner spinner = new JSpinner();
-        spinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
-        spinner.setBounds(153, 10, 29, 20);
-        panelEstudiante.add(spinner);
+        spinnerAnio = new JSpinner();
+        spinnerAnio.setModel(new SpinnerNumberModel(1, 1, 5, 1));
+        spinnerAnio.setBounds(153, 10, 29, 20);
+        panelEstudiante.add(spinnerAnio);
      
         
         // Panel para Profesor
@@ -336,36 +329,7 @@ public class AnadirPersona extends JDialog {
         panelEspecialista.add(textProyecto);
         textProyecto.setColumns(10);
         
-     // Panel para Visitante
-        panelVisitante = new JPanel();
-        panelVisitante.setLayout(null);
-        
-        JLabel lblMotivoDeVisita = new JLabel("Motivo de visita:");
-        lblMotivoDeVisita.setBounds(10, 26, 95, 14);
-        panelVisitante.add(lblMotivoDeVisita);
-        
-        JLabel lblAutorizadoaPor = new JLabel("Autorizado(a) por:");
-        lblAutorizadoaPor.setBounds(10, 87, 118, 14);
-        panelVisitante.add(lblAutorizadoaPor);
-        
-        JLabel lblAreaDeOrigen = new JLabel("\u00C1rea de origen:");
-        lblAreaDeOrigen.setBounds(10, 54, 95, 14);
-        panelVisitante.add(lblAreaDeOrigen);
-        
-        textMVisita = new JTextField();
-        textMVisita.setBounds(104, 23, 135, 20);
-        panelVisitante.add(textMVisita);
-        textMVisita.setColumns(10);
-        
-        textAOrigen = new JTextField();
-        textAOrigen.setBounds(104, 51, 135, 20);
-        panelVisitante.add(textAOrigen);
-        textAOrigen.setColumns(10);
-        
-        textAPor = new JTextField();
-        textAPor.setBounds(10, 112, 182, 20);
-        panelVisitante.add(textAPor);
-        textAPor.setColumns(10);
+     
         
      // Panel para Tecnico
         panelTecnico = new JPanel();
@@ -461,9 +425,6 @@ public class AnadirPersona extends JDialog {
         
         switch(tipo) {
         
-            case Visitante:
-        	    cl.show(panelContenedor, "Visitante");
-        	    break; 
             case Tecnico:
         	    cl.show(panelContenedor, "Tecnico");
         	    break; 
@@ -492,6 +453,8 @@ public class AnadirPersona extends JDialog {
             boolean valido = true;
 
             // Validaciones
+            
+            
             if (txtNombre.getText().trim().isEmpty() ||
                 txtApellidos.getText().trim().isEmpty() ||
                 txtIdentidad.getText().trim().isEmpty()) {
@@ -510,7 +473,7 @@ public class AnadirPersona extends JDialog {
             } else if (!txtIdentidad.getText().matches("^\\d{11}$")) {
 
                 JOptionPane.showMessageDialog(this,
-                        "Carnet inválido: debe contener 11 dígitos numéricos",
+                        "Carnet inválido: debe contener 11 dígitos ",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 valido = false;
 
@@ -519,6 +482,16 @@ public class AnadirPersona extends JDialog {
                 JOptionPane.showMessageDialog(this, "Seleccione un tipo de persona",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 valido = false;
+            }
+            
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Estudiante) {
+                try {
+                    Integer.parseInt(textGrupo.getText()); // Intenta convertir a número
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Grupo inválido: debe ser un número",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
             }
 
             if (valido) {
@@ -557,7 +530,9 @@ public class AnadirPersona extends JDialog {
         switch(tipo) {
             case Estudiante:
                 return new Estudiante(nombre, apellido, numID, tipo, 
-                    Integer.parseInt(textGrupo.getText()), 1);
+                	(Integer)spinnerAnio.getValue(),	
+                    Integer.parseInt(textGrupo.getText()));
+                   
                 
             case Profesor:
                 return new Profesor(nombre, apellido, numID, tipo, 
@@ -586,15 +561,7 @@ public class AnadirPersona extends JDialog {
                     textTContratoD.getText(),
                     textField.getText(),  // Cargo
                     textField_1.getText() // Área
-                );
-                
-            case Visitante:
-                return new Visitante(nombre, apellido, numID, tipo,
-                    textMVisita.getText(),  // Motivo visita
-                    textAOrigen.getText(),  // Área origen
-                    textAPor.getText()     // Autorizado por
-                );
-                
+                );           
             default:
                 throw new IllegalArgumentException("Tipo de persona no soportado: " + tipo);
         }
@@ -603,6 +570,15 @@ public class AnadirPersona extends JDialog {
     private boolean validarNombreApellido(JTextField txtNombre2) {
         // Verifica que el texto no esté vacío, solo contenga letras y tenga <= 50 caracteres
         return txtNombre2.getText().matches("^[\\p{L} .'-]{1,50}$");
+    }
+    
+    
+    public void setDefaultCloseOperation(int operation) {
+        super.setDefaultCloseOperation(operation);
+    }
+
+    public void addWindowListener(WindowListener listener) {
+        super.addWindowListener(listener);
     }
     
 }

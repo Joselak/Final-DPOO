@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -28,6 +31,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
 
 import dpooFinal.inicializador.Inicializador;
 import dpooFinal.logica.Clasificacion;
@@ -57,7 +61,23 @@ public class Principal extends JFrame {
     private JPanel panelDatosAcceso;
     private JPanel panelLocalAcceso;
     private JPanel panelTipoPersona;
-    
+    private JPanel panelDatosVisitante;
+    private JTextField textMotivoVisita;
+    private JTextField textAreaOrigen;
+    private JTextField textAutorizadoPor;	
+	private JButton btnAnterior;
+	private JLabel label;
+	private JLabel label_1;
+    //private JLabel lblMotivoVisita;
+	//private JLabel lblAreaOrigen;
+	//private JLabel lblAutorizadoPor;
+	HorarioAcceso dialog;
+	VisitasIntervalo dialogVisitasIntervalo;
+	PersonaVisita dialogPersonaVisita;
+	Busqueda dialogBusqueda;
+	AnadirPersona dialogAnadirPersona;
+	MostrarRegistros dialogMostrarRegistros;
+	
     public Principal() {
         setTitle("Gestor de Accesos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,10 +98,23 @@ public class Principal extends JFrame {
         mntmMostrarRegistros.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    MostrarRegistros dialog = new MostrarRegistros(facultad);
-                    dialog.setFacultad(facultad);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
+                	
+                	if (dialogMostrarRegistros == null || !dialogMostrarRegistros.isVisible()){
+                	dialogMostrarRegistros= new MostrarRegistros(facultad);
+                	dialogMostrarRegistros.setFacultad(facultad);
+                	dialogMostrarRegistros.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                	dialogMostrarRegistros.setVisible(true);
+                	
+                	dialogMostrarRegistros.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        	dialogMostrarRegistros = null;
+                        }
+                    });
+                	}else {
+                        // Traer al frente la ventana existente
+                		dialogMostrarRegistros.toFront();
+                    }
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -93,10 +126,24 @@ public class Principal extends JFrame {
         mntmAadirRegistro.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    AnadirPersona dialog = new AnadirPersona();
-                    dialog.setFacultad(facultad);  
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
+                	
+                	if (dialogAnadirPersona == null || !dialogAnadirPersona.isVisible()){
+                		dialogAnadirPersona = new AnadirPersona();
+                	dialogAnadirPersona.setFacultad(facultad);  
+                	dialogAnadirPersona.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                	dialogAnadirPersona.setVisible(true);
+                	
+                	dialogAnadirPersona.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        	dialogAnadirPersona = null;
+                        }
+                    });
+                	}else {
+                        // Traer al frente la ventana existente
+                		dialogAnadirPersona.toFront();
+                    }
+       	
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -111,10 +158,24 @@ public class Principal extends JFrame {
         mntmBusquedaPor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Busqueda dialog = new Busqueda();
-                    dialog.setFacultad(facultad);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
+                	
+                	if (dialogBusqueda == null || !dialogBusqueda.isVisible()){
+                		dialogBusqueda= new Busqueda();
+                	dialogBusqueda.setFacultad(facultad);
+                	dialogBusqueda.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                	dialogBusqueda.setVisible(true);
+                	
+                	dialogBusqueda.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        	dialogBusqueda = null;
+                        }
+                    });
+                	}else {
+                        // Traer al frente la ventana existente
+                		dialogBusqueda.toFront();
+                    }
+	
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -124,30 +185,68 @@ public class Principal extends JFrame {
         
         JMenu mnConsultar = new JMenu("Reportes");
         menuBar.add(mnConsultar);
+              
         
-        JMenuItem mntmVisitasALocales = new JMenuItem("Visitas en un intervalos");
-        mnConsultar.add(mntmVisitasALocales);
-        
+        //VISITAS POR UUNA PERSONA
         JMenuItem mntmLocalesPorPersona = new JMenuItem("Visitas por una persona");
         mnConsultar.add(mntmLocalesPorPersona);
         mntmLocalesPorPersona.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    PersonaVisita dialog = new PersonaVisita(facultad);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
+                	
+                	if (dialogPersonaVisita == null || !dialogPersonaVisita.isVisible()){
+                		dialogPersonaVisita= new PersonaVisita(facultad);
+                	dialogPersonaVisita.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                	dialogPersonaVisita.setVisible(true);
+                	
+                	dialogPersonaVisita.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        	dialogPersonaVisita = null;
+                        }
+                    });
+                		
+                	}else {
+                        // Traer al frente la ventana existente
+                		dialogPersonaVisita.toFront();
+                    }
+                	
+                	
+                	
+                	
+                	
                 } catch (Exception e2) {
                     e2.printStackTrace();
                 }
             }
         });
+        
+        
+        
+        JMenuItem mntmVisitasALocales = new JMenuItem("Visitas en un intervalos");
+        mnConsultar.add(mntmVisitasALocales);
+        
         mntmVisitasALocales.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    VisitasIntervalo dialog = new VisitasIntervalo(facultad);
-                    dialog.setFacultad(facultad);
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
+                	
+                	if (dialogVisitasIntervalo == null || !dialogVisitasIntervalo.isVisible()) {
+                		dialogVisitasIntervalo = new VisitasIntervalo(facultad);
+                    	dialogVisitasIntervalo.setFacultad(facultad);
+                    	dialogVisitasIntervalo.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    	dialogVisitasIntervalo.setVisible(true);
+                        // Listener para limpiar la referencia al cerrar
+                		dialogVisitasIntervalo.addWindowListener(new java.awt.event.WindowAdapter() {
+                            @Override
+                            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            	dialogVisitasIntervalo = null;
+                            }
+                        });
+                    } else {
+                        // Traer al frente la ventana existente
+                    	dialogVisitasIntervalo.toFront();
+                    }
+
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -161,9 +260,25 @@ public class Principal extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    HorarioAcceso dialog = new HorarioAcceso();
-                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                    dialog.setVisible(true);
+                    
+                    if (dialog == null || !dialog.isVisible()){
+                    	 dialog = new HorarioAcceso();
+                    	 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                         dialog.setVisible(true);
+                         
+                         
+                      // Listener para limpiar la referencia al cerrar
+                         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                             @Override
+                             public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                                 dialog = null;
+                             }
+                         });
+                    }else{
+                        // Traer al frente la ventana existente
+                        dialog.toFront();
+                    }                   
+        
                 } catch (Exception e2) {
                     e2.printStackTrace();
                 }
@@ -206,42 +321,79 @@ public class Principal extends JFrame {
         panelDatosPersonales.setLayout(null);
         
         JLabel lblCarnet = new JLabel("Carnet:");
-        lblCarnet.setBounds(10, 28, 148, 14);
+        lblCarnet.setBounds(30, 28, 148, 14);
         panelDatosPersonales.add(lblCarnet);
         
         textField_2 = new JTextField();
         textField_2.setColumns(10);
-        textField_2.setBounds(10, 49, 194, 20);
+        textField_2.setBounds(30, 50, 194, 20);
         panelDatosPersonales.add(textField_2);
         
-        JLabel label = new JLabel("Nombre(s):");
-        label.setBounds(10, 81, 66, 14);
+        label = new JLabel("Nombre(s):");
+        label.setBounds(30, 81, 66, 14);
         panelDatosPersonales.add(label);
         
         textField = new JTextField();
         textField.setColumns(10);
-        textField.setBounds(10, 107, 194, 20);
+        textField.setBounds(30, 106, 194, 20);
         panelDatosPersonales.add(textField);
         
-        JLabel label_1 = new JLabel("Apellido(s)");
-        label_1.setBounds(10, 139, 78, 14);
+        label_1 = new JLabel("Apellido(s)");
+        label_1.setBounds(30, 139, 78, 14);
         panelDatosPersonales.add(label_1);
         
         textField_1 = new JTextField();
         textField_1.setColumns(10);
-        textField_1.setBounds(10, 165, 194, 20);
+        textField_1.setBounds(30, 164, 194, 20);
         panelDatosPersonales.add(textField_1);
+        
+
+        
         
         // Panel para datos de acceso
         panelDatosAcceso = new JPanel();
         panelDatosAcceso.setBorder(new TitledBorder(null, "Datos de Acceso", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelDatosAcceso.setLayout(null);
         
+        //PANEL PARA LOS OTROS DATOS DEL VISITANTE
+        panelDatosVisitante = new JPanel();
+        panelDatosVisitante.setBorder(new TitledBorder(null, "Datos del Visitante", 
+            TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        panelDatosVisitante.setLayout(null);
+
+        JLabel lblMotivoVisita = new JLabel("Motivo de visita:");
+        lblMotivoVisita.setBounds(30, 30, 150, 14);
+        panelDatosVisitante.add(lblMotivoVisita);
+
+        textMotivoVisita = new JTextField();
+        textMotivoVisita.setBounds(30, 50, 194, 20);
+        panelDatosVisitante.add(textMotivoVisita);
+        textMotivoVisita.setColumns(10);
+
+        JLabel lblAreaOrigen = new JLabel("Área de origen:");
+        lblAreaOrigen.setBounds(30, 80, 150, 14);
+        panelDatosVisitante.add(lblAreaOrigen);
+
+        textAreaOrigen = new JTextField();
+        textAreaOrigen.setBounds(30, 100, 194, 20);
+        panelDatosVisitante.add(textAreaOrigen);
+        textAreaOrigen.setColumns(10);
+
+        JLabel lblAutorizadoPor = new JLabel("Autorizado por:");
+        lblAutorizadoPor.setBounds(30, 130, 150, 14);
+        panelDatosVisitante.add(lblAutorizadoPor);
+
+        textAutorizadoPor = new JTextField();
+        textAutorizadoPor.setBounds(30, 150, 194, 20);
+        panelDatosVisitante.add(textAutorizadoPor);
+        textAutorizadoPor.setColumns(10);
+
+        
         // Panel para local de acceso (siempre visible)
         panelLocalAcceso = new JPanel();
         panelLocalAcceso.setLayout(null);
         panelLocalAcceso.setBorder(new TitledBorder(null, "Local de acceso", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panelLocalAcceso.setBounds(10, 34, 212, 64);
+        panelLocalAcceso.setBounds(10, 33, 212, 64);
         panelDatosAcceso.add(panelLocalAcceso);
         
         comboBox_2 = new JComboBox<>(new DefaultComboBoxModel<>(Clasificacion.values()));
@@ -270,15 +422,32 @@ public class Principal extends JFrame {
         panelDatosAcceso.add(panelTipoPersona);
         
         comboBox_3 = new JComboBox<TipoPersonal>();
-        comboBox_3.setModel(new DefaultComboBoxModel<TipoPersonal>(TipoPersonal.values()));
+     // Crear lista de tipos excluyendo Visitante
+        List<TipoPersonal> tiposFiltrados = new ArrayList<>(Arrays.asList(TipoPersonal.values()));
+        tiposFiltrados.remove(TipoPersonal.Visitante);
+
+        // Configurar modelo con tipos filtrados
+        comboBox_3.setModel(new DefaultComboBoxModel<>(tiposFiltrados.toArray(new TipoPersonal[0])));
         comboBox_3.setBounds(31, 22, 149, 20);
         panelTipoPersona.add(comboBox_3);
         
         // Añadir paneles al cardPanel
         cardPanel.add(panelDatosPersonales, "datosPersonales");
         cardPanel.add(panelDatosAcceso, "datosAcceso");
+        cardPanel.add(panelDatosVisitante, "datosVisitante");
         
         // Botones
+        
+        btnAnterior = new JButton("Anterior");
+        btnAnterior.setBounds(323, 406, 89, 23);
+        btnAnterior.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                volverAtras();
+            }
+        });
+        contentPane.add(btnAnterior);
+        btnAnterior.setVisible(false); // Inicialmente oculto
+        
         btnSiguiente = new JButton("Siguiente");
         btnSiguiente.setBounds(422, 406, 89, 23);
         btnSiguiente.addActionListener(new ActionListener() {
@@ -316,12 +485,19 @@ public class Principal extends JFrame {
         setLocationRelativeTo(null);
     }
     
+    
+    
+    
+    
+    
     private void configurarVisibilidadCampos() {
     	
-    	textField.setVisible(false);
-        textField_1.setVisible(false);
-        panelDatosPersonales.getComponent(2).setVisible(false); // Label nombre
-        panelDatosPersonales.getComponent(4).setVisible(false); // Label apellido
+    	textField.setVisible(false);//nombre
+        textField_1.setVisible(false);//apellido
+        label.setVisible(false); // Label nombre
+        label_1.setVisible(false); // Label apellido
+        
+        
     	
         if (rdbtnPersonal.isSelected()) {
             // Ocultar nombre y apellido en panel de datos personales
@@ -334,18 +510,28 @@ public class Principal extends JFrame {
             panelTipoPersona.setVisible(false);
             panelLocalAcceso.setVisible(true);
             comboBox_3.setEnabled(false);
+            
+            
+            
         } else if (rdbtnVisitante.isSelected()) {
             // Mostrar todo para visitante
             textField.setVisible(true);
             textField_1.setVisible(true);
-            panelDatosPersonales.getComponent(2).setVisible(true); // Label nombre
-            panelDatosPersonales.getComponent(4).setVisible(true); // Label apellido
+            label.setVisible(true); // Label nombre
+            label_1.setVisible(true); // Label apellido
             
             // Mostrar ambos paneles
             panelTipoPersona.setVisible(true);
-            panelLocalAcceso.setVisible(true);
+            panelLocalAcceso.setVisible(true);           
             comboBox_3.setEnabled(true);
             comboBox_3.setSelectedItem(TipoPersonal.Visitante);
+            /*
+            textMotivoVisita.setVisible(true);
+            textAreaOrigen.setVisible(true);
+            textAutorizadoPor.setVisible(true);
+            lblMotivoVisita.setVisible(true);
+            lblAreaOrigen.setVisible(true);
+            lblAutorizadoPor.setVisible(true);*/
         }
         
         // Mostrar siempre el panel de datos personales al inicio
@@ -353,61 +539,149 @@ public class Principal extends JFrame {
         btnSiguiente.setText("Siguiente");
     }
     
+    
+    
+    
     private void siguientePaso() {
+        String carnet;
+        boolean continuar = true;
+        String errorMessage = null;
+        int messageType = JOptionPane.ERROR_MESSAGE;
+
+        // Validar selección de tipo
         if (!rdbtnPersonal.isSelected() && !rdbtnVisitante.isSelected()) {
-            JOptionPane.showMessageDialog(this, "Seleccione si es Personal de la Facultad o es un Visitante", "Error", JOptionPane.INFORMATION_MESSAGE);
+            errorMessage = "Seleccione si es Personal de la Facultad o es un Visitante";
+            messageType = JOptionPane.INFORMATION_MESSAGE;
+            continuar = false;
+        }
+
+        // Validar carnet si no hay error previo
+        if (continuar) {
+            carnet = textField_2.getText().trim();
+            if (carnet.isEmpty()) {
+                errorMessage = "Complete los campos";
+                continuar = false;
+            } 
+            else if (!carnet.matches("^\\d{11}$")) {
+                errorMessage = "Carnet inválido. Debe contener 11 dígitos";
+                continuar = false;
+            }
+        }
+
+        // Mostrar error si existe
+        if (!continuar) {
+            JOptionPane.showMessageDialog(this, errorMessage, "Error", messageType);
             return;
         }
-        
-        // Validar datos personales
-        String carnet = textField_2.getText().trim();
-        if (carnet.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese el carnet", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+
+        carnet = textField_2.getText().trim();  // Recuperar carnet validado
+
+        // Manejar panel visible
+        if (panelDatosPersonales.isVisible()) {
+            continuar = manejarPanelDatosPersonales(carnet);
+        } 
+        else if (panelDatosAcceso.isVisible()) {
+            manejarPanelDatosAcceso();
+        } 
+        else if (panelDatosVisitante.isVisible()) {
+            continuar = manejarPanelDatosVisitante();
+            if (continuar) {
+                registrarAcceso();
+                reiniciarFlujo();
+            }
         }
+    }
+
+    
+    
+    private boolean manejarPanelDatosPersonales(String carnet) {
+        boolean continuar = true;
+        String errorMessage = null;
         
         if (rdbtnPersonal.isSelected()) {
             Persona persona = facultad.buscarPersona(carnet);
             if (persona == null || persona.getTipo() == TipoPersonal.Visitante) {
-                JOptionPane.showMessageDialog(this, "No se encontró personal con ese carnet", "Error", JOptionPane.WARNING_MESSAGE);
-                return;
+                errorMessage = "No se encontró personal con ese carnet";
+                continuar = false;
+            } else {
+                textField.setText(persona.getNombre());
+                textField_1.setText(persona.getApellido());
             }
-            // Autocompletar nombre y apellido para personal
-            textField.setText(persona.getNombre());
-            textField_1.setText(persona.getApellido());
-        } else if (rdbtnVisitante.isSelected()) {
+        } 
+        else if (rdbtnVisitante.isSelected()) {
             String nombre = textField.getText().trim();
             String apellido = textField_1.getText().trim();
             
             if (nombre.isEmpty() || apellido.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Complete todos los campos del visitante", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            if (!validarNombreApellido(nombre) || !validarNombreApellido(apellido)) {
-                JOptionPane.showMessageDialog(this, "Nombre inválido", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
+                errorMessage = "Complete todos los campos del visitante";
+                continuar = false;
+            } 
+            else if (!validarNombreApellido(nombre) || !validarNombreApellido(apellido)) {
+                errorMessage = "Nombre inválido";
+                continuar = false;
             }
         }
-        
-        if (cardPanel.getComponent(0).isVisible()) {
+
+        // Si todo está bien, avanzar
+        if (continuar) {
             cardLayout.show(cardPanel, "datosAcceso");
-            btnSiguiente.setText("Registrar");
+            btnSiguiente.setText("Siguiente");
+            btnAnterior.setVisible(true);
             
-            // Si es personal, establecer el tipo automáticamente
             if (rdbtnPersonal.isSelected()) {
-                Persona persona = facultad.buscarPersona(textField_2.getText().trim());
+                Persona persona = facultad.buscarPersona(carnet);
                 if (persona != null) {
                     comboBox_3.setSelectedItem(persona.getTipo());
                 }
             }
+        } 
+        else if (errorMessage != null) {
+            JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.WARNING_MESSAGE);
+        }
+        
+        return continuar;
+    }
+    
+    
+
+    private void manejarPanelDatosAcceso() {
+        if (rdbtnVisitante.isSelected()) {
+            cardLayout.show(cardPanel, "datosVisitante");
+            btnSiguiente.setText("Registrar");
+            btnAnterior.setVisible(true);
         } else {
             registrarAcceso();
-            cardLayout.show(cardPanel, "datosPersonales");
-            btnSiguiente.setText("Siguiente");
-            limpiarCampos();
+            reiniciarFlujo();
         }
     }
+
+    
+    
+    private boolean manejarPanelDatosVisitante() {
+        String motivo = textMotivoVisita.getText().trim();
+        String area = textAreaOrigen.getText().trim();
+        String autorizado = textAutorizadoPor.getText().trim();
+        boolean continuar = true;
+        
+        if (motivo.isEmpty() || area.isEmpty() || autorizado.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Complete todos los campos del visitante", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            continuar = false;
+        }
+        
+        return continuar;
+    }
+    
+
+    private void reiniciarFlujo() {
+        cardLayout.show(cardPanel, "datosPersonales");
+        btnSiguiente.setText("Siguiente");
+        btnAnterior.setVisible(false);
+        limpiarCampos();
+    }
+    
+    
     
     private void cargarLocales() {
         DefaultComboBoxModel<Clasificacion> model = new DefaultComboBoxModel<>(Clasificacion.values());
@@ -434,6 +708,8 @@ public class Principal extends JFrame {
         });
     }
     
+    
+    
     private LocalDateTime calcularHoraSalida(Persona persona) {
         LocalDateTime ahora = LocalDateTime.now();
         
@@ -452,6 +728,9 @@ public class Principal extends JFrame {
                 return ahora.plusHours(1);
         }
     }
+    
+    
+    
     
     private void registrarAcceso() {
         String carnet = textField_2.getText().trim();
@@ -482,12 +761,16 @@ public class Principal extends JFrame {
                             "\nHora de entrada: " + horaEntrada.format(formato) +
                             "\nHora de salida estimada: " + horaSalida.format(formato),
                     "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
-        } else if (rdbtnVisitante.isSelected()) {
+            
+        } else if (rdbtnVisitante.isSelected()) {//SI EL VISITANTE ES SELECCCIONADO
             String nombre = textField.getText().trim();
             String apellido = textField_1.getText().trim();
+            String motivo = textMotivoVisita.getText().trim();
+            String area = textAreaOrigen.getText().trim();
+            String autorizado = textAutorizadoPor.getText().trim();
 
             Visitante visitante = new Visitante(nombre, apellido, carnet, TipoPersonal.Visitante, 
-                    "Visita", "Institución no especificada", "Contacto no especificado");
+            		motivo,area,autorizado);
             
             if (!facultad.verificarAcceso(nuevoLocal, visitante)) {
                 JOptionPane.showMessageDialog(this, 
@@ -511,9 +794,13 @@ public class Principal extends JFrame {
         }
     }
     
+    
+    
     private boolean validarNombreApellido(String texto) {
         return texto.matches("^[\\p{L} .'-]{1,50}$");
     }
+    
+    
     
     private String generarNombreLocal(Clasificacion clasificacion) {
         String prefijo;
@@ -555,6 +842,8 @@ public class Principal extends JFrame {
         return prefijo + "-" + sufijo;
     }
     
+    
+    
     private void limpiarCampos() {
         textField_2.setText("");
         textField.setText("");
@@ -563,5 +852,23 @@ public class Principal extends JFrame {
         buttonGroup.clearSelection();
         rdbtnPersonal.setSelected(false);
         rdbtnVisitante.setSelected(false);
+        textMotivoVisita.setText("");
+        textAreaOrigen.setText("");
+        textAutorizadoPor.setText("");
+    }
+    
+    
+    
+    
+    private void volverAtras() {
+        if (panelDatosVisitante.isVisible()) {
+            cardLayout.show(cardPanel, "datosAcceso");
+            btnSiguiente.setText("Siguiente");
+            btnAnterior.setVisible(false);
+        } else if (panelDatosAcceso.isVisible()) {
+            cardLayout.show(cardPanel, "datosPersonales");
+            btnSiguiente.setText("Siguiente");
+            btnAnterior.setVisible(false);
+        }
     }
 }
