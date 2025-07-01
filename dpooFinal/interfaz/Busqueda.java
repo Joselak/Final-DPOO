@@ -276,7 +276,7 @@ public class Busqueda extends JDialog {
             panelLocal.add(comboBox_1);
         }
         
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		
 		private void crearPanelTipoPersona() {
             panelTipoPersona = new JPanel();
             panelTipoPersona.setLayout(null);
