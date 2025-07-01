@@ -1,4 +1,4 @@
-package dpooFinal.logica;
+package dpooFinal.src.logica;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;

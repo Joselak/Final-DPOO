@@ -1,4 +1,4 @@
-package dpooFinal.interfaz;
+package dpooFinal.src.interfaz;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

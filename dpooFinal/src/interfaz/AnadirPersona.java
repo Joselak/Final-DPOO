@@ -1,16 +1,16 @@
-package dpooFinal.interfaz;
+package dpooFinal.src.interfaz;
 
 
 
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Administrativo;
-import dpooFinal.logica.Persona;
-import dpooFinal.logica.TipoPersonal;
-import dpooFinal.logica.Directivo;
-import dpooFinal.logica.Especialista;
-import dpooFinal.logica.Estudiante;
-import dpooFinal.logica.Profesor;
-import dpooFinal.logica.Tecnico;
+import dpooFinal.src.logica.Facultad;
+import dpooFinal.src.logica.Administrativo;
+import dpooFinal.src.logica.Persona;
+import dpooFinal.src.logica.TipoPersonal;
+import dpooFinal.src.logica.Directivo;
+import dpooFinal.src.logica.Especialista;
+import dpooFinal.src.logica.Estudiante;
+import dpooFinal.src.logica.Profesor;
+import dpooFinal.src.logica.Tecnico;
 
 
 import java.awt.BorderLayout;

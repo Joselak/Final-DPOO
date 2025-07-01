@@ -1,4 +1,4 @@
-package dpooFinal.interfaz;
+package dpooFinal.src.interfaz;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -39,13 +39,13 @@ import java.awt.CardLayout;
 import java.awt.Image;
 import java.awt.Insets;
 
-import dpooFinal.inicializador.Inicializador;
-import dpooFinal.logica.Clasificacion;
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
-import dpooFinal.logica.Persona;
-import dpooFinal.logica.TipoPersonal;
-import dpooFinal.logica.Visitante;
+import dpooFinal.src.inicializador.Inicializador;
+import dpooFinal.src.logica.Clasificacion;
+import dpooFinal.src.logica.Facultad;
+import dpooFinal.src.logica.Local;
+import dpooFinal.src.logica.Persona;
+import dpooFinal.src.logica.TipoPersonal;
+import dpooFinal.src.logica.Visitante;
 
 public class Principal extends JFrame {
 

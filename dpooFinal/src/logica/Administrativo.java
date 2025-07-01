@@ -1,4 +1,4 @@
-package dpooFinal.logica;
+package dpooFinal.src.logica;
 
 public class Administrativo extends Persona {
 	

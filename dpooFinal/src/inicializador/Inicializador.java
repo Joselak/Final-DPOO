@@ -1,4 +1,4 @@
-package dpooFinal.inicializador;
+package dpooFinal.src.inicializador;
 
 import java.awt.EventQueue;
 import java.awt.Window;
@@ -11,16 +11,16 @@ import com.formdev.flatlaf.FlatLightLaf;
 import java.util.prefs.Preferences;
 
 
-import dpooFinal.interfaz.Principal;
-import dpooFinal.logica.Administrativo;
-import dpooFinal.logica.Clasificacion;
-import dpooFinal.logica.Directivo;
-import dpooFinal.logica.Estudiante;
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
-import dpooFinal.logica.Profesor;
-import dpooFinal.logica.Tecnico;
-import dpooFinal.logica.TipoPersonal;
+import dpooFinal.src.interfaz.Principal;
+import dpooFinal.src.logica.Administrativo;
+import dpooFinal.src.logica.Clasificacion;
+import dpooFinal.src.logica.Directivo;
+import dpooFinal.src.logica.Estudiante;
+import dpooFinal.src.logica.Facultad;
+import dpooFinal.src.logica.Local;
+import dpooFinal.src.logica.Profesor;
+import dpooFinal.src.logica.Tecnico;
+import dpooFinal.src.logica.TipoPersonal;
 
 public class Inicializador {
 	

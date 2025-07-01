@@ -1,4 +1,4 @@
-package dpooFinal.interfaz;
+package dpooFinal.src.interfaz;
 
 
 import java.awt.BorderLayout;
@@ -29,19 +29,19 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import dpooFinal.logica.Administrativo;
-import dpooFinal.logica.Clasificacion;
-import dpooFinal.logica.Directivo;
-import dpooFinal.logica.Especialista;
-import dpooFinal.logica.Estudiante;
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
-import dpooFinal.logica.Persona;
-import dpooFinal.logica.Profesor;
-import dpooFinal.logica.Registro;
-import dpooFinal.logica.Tecnico;
-import dpooFinal.logica.TipoPersonal;
-import dpooFinal.logica.Visitante;
+import dpooFinal.src.logica.Administrativo;
+import dpooFinal.src.logica.Clasificacion;
+import dpooFinal.src.logica.Directivo;
+import dpooFinal.src.logica.Especialista;
+import dpooFinal.src.logica.Estudiante;
+import dpooFinal.src.logica.Facultad;
+import dpooFinal.src.logica.Local;
+import dpooFinal.src.logica.Persona;
+import dpooFinal.src.logica.Profesor;
+import dpooFinal.src.logica.Registro;
+import dpooFinal.src.logica.Tecnico;
+import dpooFinal.src.logica.TipoPersonal;
+import dpooFinal.src.logica.Visitante;
 import java.awt.event.MouseEvent;
 
 

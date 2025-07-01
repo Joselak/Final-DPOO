@@ -1,4 +1,4 @@
-package dpooFinal.interfaz;
+package dpooFinal.src.interfaz;
 
 
 
@@ -31,17 +31,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.WindowListener;
 
-import dpooFinal.logica.Administrativo;
-import dpooFinal.logica.Directivo;
-import dpooFinal.logica.Especialista;
-import dpooFinal.logica.Estudiante;
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
-import dpooFinal.logica.Persona;
-import dpooFinal.logica.Profesor;
-import dpooFinal.logica.Registro;
-import dpooFinal.logica.Tecnico;
-import dpooFinal.logica.Visitante;
+import dpooFinal.src.logica.Administrativo;
+import dpooFinal.src.logica.Directivo;
+import dpooFinal.src.logica.Especialista;
+import dpooFinal.src.logica.Estudiante;
+import dpooFinal.src.logica.Facultad;
+import dpooFinal.src.logica.Local;
+import dpooFinal.src.logica.Persona;
+import dpooFinal.src.logica.Profesor;
+import dpooFinal.src.logica.Registro;
+import dpooFinal.src.logica.Tecnico;
+import dpooFinal.src.logica.Visitante;
 
 
 public class VisitasIntervalo extends JDialog {
@@ -104,7 +104,7 @@ public class VisitasIntervalo extends JDialog {
 	        panelControles.add(label);
 	        comboLocales = new JComboBox<>();
 	        comboLocales.setBounds(45, 0, 126, 23);
-	        for (dpooFinal.logica.Local local : facultad.getLocales()) {
+	        for (dpooFinal.src.logica.Local local : facultad.getLocales()) {
 	            comboLocales.addItem(local.getId());
 	        }
 	        panelControles.add(comboLocales);

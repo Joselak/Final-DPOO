@@ -1,8 +1,8 @@
-package dpooFinal.interfaz;
+package dpooFinal.src.interfaz;
 
-import dpooFinal.logica.Facultad;
-import dpooFinal.logica.Local;
-import dpooFinal.logica.Registro;
+import dpooFinal.src.logica.Facultad;
+import dpooFinal.src.logica.Local;
+import dpooFinal.src.logica.Registro;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
