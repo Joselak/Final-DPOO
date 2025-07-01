@@ -1,7 +1,15 @@
 package dpooFinal.inicializador;
 
 import java.awt.EventQueue;
+import java.awt.Window;
 import java.time.LocalDateTime;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import java.util.prefs.Preferences;
+
 
 import dpooFinal.interfaz.Principal;
 import dpooFinal.logica.Administrativo;
@@ -16,7 +24,13 @@ import dpooFinal.logica.TipoPersonal;
 
 public class Inicializador {
 	
+	private static boolean temaOscuro = false;
+	
 	public static void main(String[] args) {
+		
+        //PARA QUE LA BARRA DE MENU NO SE INTEGRE CON EL TTITULO DE LA VENTANA 
+        UIManager.put("TitlePane.menuBarEmbedded", false);
+        
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -29,8 +43,70 @@ public class Inicializador {
         });
     }
 	
+	/*--------------------------------------------------------------------------------------------------------------------------
+	 * ----------------------------------------------------------------------------------------------------------------------
+	 * ------------------------------------------------------------------------------------------------------------------------
+	 * --------------------------------------------------------------------------------------------------------------------------*/
+	
+	//PARA CAMBIAR LOS TEMAS	
+	 // Método para configurar el tema inicial al arrancar la aplicación
+    public static void configurarTemaInicial() {
+        temaOscuro = cargarPreferenciaTema();
+        aplicarTema(temaOscuro);
+    }
+
+    // Método público para cambiar el tema (será llamado desde los botones)
+    public static void cambiarTema() {
+        temaOscuro = !temaOscuro;
+        aplicarTema(temaOscuro);
+        guardarPreferenciaTema(temaOscuro);
+    }
+
+    // Método para verificar el estado actual del tema
+    public static boolean isTemaOscuro() {
+        return temaOscuro;
+    }
+
+    // Método privado que aplica el tema seleccionado
+    private static void aplicarTema(boolean oscuro) {
+        try {
+            if (oscuro) {
+                FlatDarkLaf.setup();
+            } else {
+                FlatLightLaf.setup();
+            }
+            actualizarVentanasAbiertas();
+        } catch (Exception e) {
+            System.err.println("Error al aplicar el tema: " + e.getMessage());
+        }
+    }
+
+    // Actualiza todas las ventanas abiertas
+    private static void actualizarVentanasAbiertas() {
+        for (Window window : Window.getWindows()) {
+            SwingUtilities.updateComponentTreeUI(window);
+        }
+    }
+
+    // Guarda la preferencia del tema
+    private static void guardarPreferenciaTema(boolean oscuro) {
+        Preferences prefs = Preferences.userNodeForPackage(Inicializador.class);
+        prefs.putBoolean("temaOscuro", oscuro);
+    }
+
+    // Carga la preferencia guardada del tema
+    private static boolean cargarPreferenciaTema() {
+        Preferences prefs = Preferences.userNodeForPackage(Inicializador.class);
+        return prefs.getBoolean("temaOscuro", false); // false = tema claro por defecto
+    }
 	
 	
+	
+	
+	/*REGISTROS INICIALIZADOS---------------------------------------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------------------------------------------------------
+    -----------------------------------------------------------------------------------------------------------------------------------*/
+    
    public Facultad inicializarDatosRegistros() {
     	
         Facultad f = Facultad.getInstancia();

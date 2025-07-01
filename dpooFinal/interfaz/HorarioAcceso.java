@@ -32,7 +32,7 @@ public class HorarioAcceso extends JDialog {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * Create the dialog.
 	 */

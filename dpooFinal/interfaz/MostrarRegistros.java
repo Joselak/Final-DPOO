@@ -33,6 +33,8 @@ import dpooFinal.logica.Registro;
 import dpooFinal.logica.Tecnico;
 import dpooFinal.logica.Visitante;
 import java.awt.event.WindowListener;
+
+
 public class MostrarRegistros extends JDialog {
     
     private static final long serialVersionUID = 1L;

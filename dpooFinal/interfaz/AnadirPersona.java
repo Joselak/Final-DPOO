@@ -256,7 +256,7 @@ public class AnadirPersona extends JDialog {
         
         spinnerAnio = new JSpinner();
         spinnerAnio.setModel(new SpinnerNumberModel(1, 1, 5, 1));
-        spinnerAnio.setBounds(153, 10, 29, 20);
+        spinnerAnio.setBounds(153, 10, 38, 20);
         panelEstudiante.add(spinnerAnio);
      
         

@@ -1,37 +1,43 @@
 package dpooFinal.interfaz;
 
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
 
+import java.awt.Color;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.border.LineBorder;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
+
+import java.awt.Component;
+import java.awt.CardLayout;
+import java.awt.Image;
+import java.awt.Insets;
 
 import dpooFinal.inicializador.Inicializador;
 import dpooFinal.logica.Clasificacion;
@@ -42,8 +48,9 @@ import dpooFinal.logica.TipoPersonal;
 import dpooFinal.logica.Visitante;
 
 public class Principal extends JFrame {
-    
-    private static final long serialVersionUID = 1L;
+
+
+	private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private Facultad facultad;
     private JTextField textField;
@@ -87,6 +94,10 @@ public class Principal extends JFrame {
         // INICIALIZAR FACULTAD 
         Inicializador ini= new Inicializador();
         facultad = ini.inicializarDatosRegistros();
+        
+        Inicializador.configurarTemaInicial();
+        
+        
         
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -395,7 +406,7 @@ public class Principal extends JFrame {
         panelLocalAcceso.setBorder(new TitledBorder(null, "Local de acceso", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelLocalAcceso.setBounds(10, 33, 212, 64);
         panelDatosAcceso.add(panelLocalAcceso);
-        
+        //COMBOBOX PARA ELEGIR UN TIPO DE LOCAL
         comboBox_2 = new JComboBox<>(new DefaultComboBoxModel<>(Clasificacion.values()));
         cargarLocales();
         comboBox_2.setBounds(30, 27, 153, 20);
@@ -466,6 +477,47 @@ public class Principal extends JFrame {
         btnSalir.setBounds(523, 406, 89, 23);
         contentPane.add(btnSalir);
         
+        
+        //BOTON PARA CAMIAR DE TEMA
+        final JButton btnCambiarTema = new JButton(){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+        	    public void setText(String text) {
+        	        // Bloquea cualquier intento de establecer texto
+        	        super.setText("");
+        	    }
+        };
+        btnCambiarTema.setBorderPainted(false); // Para mejor apariencia
+        btnCambiarTema.setContentAreaFilled(true); // Fondo transparente
+        btnCambiarTema.setFocusPainted(false);
+        btnCambiarTema.setMargin(new Insets(0, 0, 0, 0));  // Elimina márgenes internos
+        btnCambiarTema.setBorder(null);  // Elimina bordes ocultos
+        
+     // Determinar el icono inicial según el tema actual
+        ImageIcon iconoInicial;
+        if (Inicializador.isTemaOscuro()) {
+            // Si el tema es oscuro, mostrar el icono de sol (para cambiar a claro)
+            iconoInicial = new ImageIcon(getClass().getResource("/icons/sun.png"));
+        } else {
+            // Si el tema es claro, mostrar el icono de luna (para cambiar a oscuro)
+            iconoInicial = new ImageIcon(getClass().getResource("/icons/moon.png"));
+        }
+
+        // Redimensionar y asignar el icono
+        Image imgInicial = iconoInicial.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        btnCambiarTema.setIcon(new ImageIcon(imgInicial));   
+        
+        btnCambiarTema.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		Inicializador.cambiarTema();
+        	    actualizarBotonTema(btnCambiarTema);
+        	}
+        });
+        btnCambiarTema.setBounds(579, 11, 25, 23);
+        contentPane.add(btnCambiarTema);
+        
+        
         // Listeners para radio buttons
         rdbtnPersonal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -486,7 +538,10 @@ public class Principal extends JFrame {
     }
     
     
-    
+    /*---------------------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
+     * -------------------------------------------------------------------------------------------
+     * -------------------------------------METODOS*/
     
     
     
@@ -525,13 +580,7 @@ public class Principal extends JFrame {
             panelLocalAcceso.setVisible(true);           
             comboBox_3.setEnabled(true);
             comboBox_3.setSelectedItem(TipoPersonal.Visitante);
-            /*
-            textMotivoVisita.setVisible(true);
-            textAreaOrigen.setVisible(true);
-            textAutorizadoPor.setVisible(true);
-            lblMotivoVisita.setVisible(true);
-            lblAreaOrigen.setVisible(true);
-            lblAutorizadoPor.setVisible(true);*/
+            
         }
         
         // Mostrar siempre el panel de datos personales al inicio
@@ -541,7 +590,7 @@ public class Principal extends JFrame {
     
     
     
-    
+    //METODO PARA UTILIZAR EL BOTON SIGUIENTE
     private void siguientePaso() {
         String carnet;
         boolean continuar = true;
@@ -772,6 +821,8 @@ public class Principal extends JFrame {
             Visitante visitante = new Visitante(nombre, apellido, carnet, TipoPersonal.Visitante, 
             		motivo,area,autorizado);
             
+            facultad.agregarPersona(visitante);
+            
             if (!facultad.verificarAcceso(nuevoLocal, visitante)) {
                 JOptionPane.showMessageDialog(this, 
                     "Acceso denegado: los visitantes solo pueden acceder en horario de 8:00 a 12:00", 
@@ -869,6 +920,25 @@ public class Principal extends JFrame {
             cardLayout.show(cardPanel, "datosPersonales");
             btnSiguiente.setText("Siguiente");
             btnAnterior.setVisible(false);
+        }
+    }
+    
+    
+    private void actualizarBotonTema(JButton boton) {
+        // Cargar los iconos
+        ImageIcon iconoLuna = new ImageIcon(getClass().getResource("/icons/moon.png"));
+        ImageIcon iconoSol = new ImageIcon(getClass().getResource("/icons/sun.png"));
+
+        // Redimensionar si es necesario
+        Image imgLuna = iconoLuna.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Image imgSol = iconoSol.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+
+        if (Inicializador.isTemaOscuro()) {
+            boton.setText("Modo Claro");
+            boton.setIcon(new ImageIcon(imgSol)); // Usar icono de sol para tema oscuro
+        } else {
+            boton.setText("Modo Oscuro");
+            boton.setIcon(new ImageIcon(imgLuna)); // Usar icono de luna para tema claro
         }
     }
 }

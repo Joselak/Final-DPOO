@@ -114,7 +114,7 @@ public class VisitasIntervalo extends JDialog {
 	        label_2.setBounds(191, 34, 78, 23);
 	        panelControles.add(label_2);
 	        spinnerFechaInicio = new JSpinner(new SpinnerDateModel());
-	        spinnerFechaInicio.setBounds(268, 34, 51, 23);
+	        spinnerFechaInicio.setBounds(268, 34, 61, 23);
 	        spinnerFechaInicio.setEditor(new JSpinner.DateEditor(spinnerFechaInicio, "HH:mm"));
 	        panelControles.add(spinnerFechaInicio);
 
@@ -123,7 +123,7 @@ public class VisitasIntervalo extends JDialog {
 	        lblHoraFin.setBounds(191, 68, 61, 23);
 	        panelControles.add(lblHoraFin);
 	        spinnerFechaFin = new JSpinner(new SpinnerDateModel());
-	        spinnerFechaFin.setBounds(268, 68, 51, 23);
+	        spinnerFechaFin.setBounds(268, 68, 61, 23);
 	        spinnerFechaFin.setEditor(new JSpinner.DateEditor(spinnerFechaFin, "HH:mm"));
 	        panelControles.add(spinnerFechaFin);
 

@@ -574,7 +574,3 @@ public class Busqueda extends JDialog {
     }
 }
 
-
-
-	
-
