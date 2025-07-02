@@ -23,13 +23,12 @@ import java.util.List;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 
-import java.awt.Color;
+
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
-import javax.swing.border.LineBorder;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
@@ -328,7 +327,7 @@ public class Principal extends JFrame {
         // Panel para datos personales
         panelDatosPersonales = new JPanel();
         panelDatosPersonales.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), 
-                "Información Personal", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+                "Información Personal", TitledBorder.LEADING, TitledBorder.TOP, null));
         panelDatosPersonales.setLayout(null);
         
         JLabel lblCarnet = new JLabel("Carnet:");
@@ -428,7 +427,7 @@ public class Principal extends JFrame {
         // Panel para tipo de persona (solo para visitantes)
         panelTipoPersona = new JPanel();
         panelTipoPersona.setLayout(null);
-        panelTipoPersona.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Tipo de persona", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
+        panelTipoPersona.setBorder(new TitledBorder(null, "Tipo de persona", TitledBorder.LEADING, TitledBorder.TOP, null));
         panelTipoPersona.setBounds(10, 120, 212, 64);
         panelDatosAcceso.add(panelTipoPersona);
         
@@ -717,6 +716,12 @@ public class Principal extends JFrame {
                 "Complete todos los campos del visitante", 
                 "Error", JOptionPane.ERROR_MESSAGE);
             continuar = false;
+        }else if(!motivo.matches("^[\\p{L} .'-]{1,50}$")|| !area.matches("^[\\p{L} .'-]{1,50}$") 
+        		|| !autorizado.matches("^[\\p{L} .'-]{1,50}$")){
+        	JOptionPane.showMessageDialog(this, 
+                    "Solo se permiten letras.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                continuar = false;
         }
         
         return continuar;
@@ -825,7 +830,7 @@ public class Principal extends JFrame {
             
             if (!facultad.verificarAcceso(nuevoLocal, visitante)) {
                 JOptionPane.showMessageDialog(this, 
-                    "Acceso denegado: los visitantes solo pueden acceder en horario de 8:00 a 12:00", 
+                    "Acceso denegado: los visitantes solo pueden acceder en horario de 8:00 am a 12:00 pm", 
                     "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }

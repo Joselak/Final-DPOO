@@ -80,18 +80,18 @@ public class AnadirPersona extends JDialog {
     private JTextField textProyecto;
     
     private JLabel labelCDD;
-    private JTextField textField;
-    private JTextField textField_1;
+    private JTextField txtCargo;
+    private JTextField txtArea;
  // Componentes para directivo
     private JTextField textDepartamentoD;
     private JTextField textCDocenteD;
     private JTextField textCCientificaD;
     private JTextField textTContratoD;
     
- 
-    
-    
+ // Componentes para tecnico
     private JTextField txtPlaza2;
+    
+    
     public static void main(String[] args) {
         try {
             AnadirPersona dialog = new AnadirPersona();
@@ -220,15 +220,15 @@ public class AnadirPersona extends JDialog {
         lblrea.setBounds(120, 95, 46, 14);
         panelDirectivo.add(lblrea);
         
-        textField = new JTextField();
-        textField.setBounds(10, 112, 107, 20);
-        panelDirectivo.add(textField);
-        textField.setColumns(10);
+        txtCargo = new JTextField();
+        txtCargo.setBounds(10, 112, 107, 20);
+        panelDirectivo.add(txtCargo);
+        txtCargo.setColumns(10);
         
-        textField_1 = new JTextField();
-        textField_1.setBounds(120, 112, 119, 20);
-        panelDirectivo.add(textField_1);
-        textField_1.setColumns(10);
+        txtArea = new JTextField();
+        txtArea.setBounds(120, 112, 119, 20);
+        panelDirectivo.add(txtArea);
+        txtArea.setColumns(10);
         
               
         // Mostrar panel vacío inicialmente
@@ -459,7 +459,7 @@ public class AnadirPersona extends JDialog {
                 txtApellidos.getText().trim().isEmpty() ||
                 txtIdentidad.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(this, "Nombre, apellidos e identidad son obligatorios",
+                JOptionPane.showMessageDialog(this, "Nombre, apellidos e identidad son campos obligatorios",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 valido = false;
 
@@ -484,16 +484,147 @@ public class AnadirPersona extends JDialog {
                 valido = false;
             }
             
-            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Estudiante) {
-                try {
-                    Integer.parseInt(textGrupo.getText()); // Intenta convertir a número
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Grupo inválido: debe ser un número",
+            
+            //VALIDACIONES PARA SI LOS CAMPOS ESTAN VACIOS
+          //VALIDACION PARA LOS CAMPOS DE ADMINISTRATIVO
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Administrativo) {
+                if (txtPlaza.getText().isEmpty()){
+                	
+                    JOptionPane.showMessageDialog(this, "Complete el campo para Admistrativo",
                             "Error", JOptionPane.ERROR_MESSAGE);
                     valido = false;
                 }
             }
-
+          //VALIDACION PARA LOS CAMPOS DE TECNICO
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Tecnico) {
+                if (txtPlaza2.getText().isEmpty()){
+                	
+                    JOptionPane.showMessageDialog(this, "Complete el campo para Tecnico",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+          //VALIDACION PARA LOS CAMPOS DE ESTUDIANTE
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Estudiante) {  
+                   if(textGrupo.getText().isEmpty()){
+               
+                    JOptionPane.showMessageDialog(this, "Complete el campo faltante para Estudiante",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            
+          //VALIDACION PARA LOS CAMPOS DE DIRECTIVO
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Directivo) {
+                if (textDepartamentoD.getText().isEmpty() || textCDocenteD.getText().isEmpty() 
+                		|| textCCientificaD.getText().isEmpty() || textTContratoD.getText().isEmpty()
+                		 || txtCargo.getText().isEmpty() || txtArea.getText().isEmpty()){
+                	
+                    JOptionPane.showMessageDialog(this, "Complete todos los campos para Directivo",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            
+            
+          //VALIDACION PARA LOS CAMPOS DE PROFESOR
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Profesor) {
+                if (textDepartamentoD.getText().isEmpty() || textCDocenteD.getText().isEmpty()
+                		|| textCCientificaD.getText().isEmpty() || textTContratoD.getText().isEmpty()){
+                	
+                    JOptionPane.showMessageDialog(this, "Complete todos los campos para Profesor",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+          //VALIDACION PARA LOS CAMPOS DE TECNICO
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Tecnico) {
+                if (txtPlaza2.getText().isEmpty()){
+                	
+                    JOptionPane.showMessageDialog(this, "Complete el campo para Tecnico",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            
+          //VALIDACION PARA LOS CAMPOS DE ESPECIALISTA
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Especialista) {
+                if (textProyecto.getText().isEmpty()){
+                	
+                    JOptionPane.showMessageDialog(this, "Complete el campo para Especialista",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            
+       
+  
+            
+            
+            //VALIDACIONES PARA SI LOS CAMPOS NO CONTIENEN LETRAS
+          //VALIDACION PARA LOS CAMPOS DE ESTUDIANTE
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Estudiante) {
+                try {
+                    Integer.parseInt(textGrupo.getText()); // Intenta convertir a número
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Los grupos se identifican con números",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+          //VALIDACION PARA LOS CAMPOS DE ESPECIALISTA
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Especialista) {
+                if (!textProyecto.getText().matches("^[\\p{L} .'-]{1,50}$")){
+                	
+                    JOptionPane.showMessageDialog(this, "Para este campo solo se permiten letras",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+          //VALIDACION PARA LOS CAMPOS DE ADMINISTRATIVO
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Administrativo) {
+                if (!txtPlaza.getText().matches("^[\\p{L} .'-]{1,50}$")){
+                	
+                    JOptionPane.showMessageDialog(this, "Para este campo solo se permiten letras",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            
+          //VALIDACION PARA LOS CAMPOS DE DIRECTIVO
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Directivo) {
+                if (!textDepartamentoD.getText().matches("^[\\p{L} .'-]{1,50}$") || !textCDocenteD.getText().matches("^[\\p{L} .'-]{1,50}$") 
+                		|| !textCCientificaD.getText().matches("^[\\p{L} .'-]{1,50}$") || !textTContratoD.getText().matches("^[\\p{L} .'-]{1,50}$")
+                		 || !txtCargo.getText().matches("^[\\p{L} .'-]{1,50}$") || !txtArea.getText().matches("^[\\p{L} .'-]{1,50}$")){
+                	
+                    JOptionPane.showMessageDialog(this, "Para estos campos solo se permiten letras",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            
+          //VALIDACION PARA LOS CAMPOS DE PROFESOR
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Profesor) {
+                if (!textDepartamentoD.getText().matches("^[\\p{L} .'-]{1,50}$") || !textCDocenteD.getText().matches("^[\\p{L} .'-]{1,50}$") 
+                		|| !textCCientificaD.getText().matches("^[\\p{L} .'-]{1,50}$") || !textTContratoD.getText().matches("^[\\p{L} .'-]{1,50}$")){
+                	
+                    JOptionPane.showMessageDialog(this, "Para estos campos solo se permiten letras",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            //VALIDACION PARA LOS CAMPOS DE TECNICO
+            if (valido && comboBoxTipo.getSelectedItem() == TipoPersonal.Tecnico) {
+                if (!txtPlaza2.getText().matches("^[\\p{L} .'-]{1,50}$")){
+                	
+                    JOptionPane.showMessageDialog(this, "Para este campo solo se permiten letras",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    valido = false;
+                }
+            }
+            
+            
+          
             if (valido) {
                 // Obtener datos
                 String nombre = txtNombre.getText().trim();
@@ -559,8 +690,8 @@ public class AnadirPersona extends JDialog {
                     textCDocenteD.getText(),
                     textCCientificaD.getText(),
                     textTContratoD.getText(),
-                    textField.getText(),  // Cargo
-                    textField_1.getText() // Área
+                    txtCargo.getText(),  // Cargo
+                    txtArea.getText() // Área
                 );           
             default:
                 throw new IllegalArgumentException("Tipo de persona no soportado: " + tipo);
